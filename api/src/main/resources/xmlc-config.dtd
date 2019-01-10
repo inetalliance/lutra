@@ -1,0 +1,49 @@
+<!ELEMENT xmlc-config (include*,messages*,xstats?,settings*,factory*,resources*,resource*,auth-challenge?,development?,production?,action*,auth*,design*,secure*)>
+<!ELEMENT include (#PCDATA)>
+<!ELEMENT authenticator (#PCDATA)>
+<!ELEMENT messages (#PCDATA)>
+<!ELEMENT xstats (#PCDATA)>
+<!ELEMENT settings (#PCDATA)>
+<!ELEMENT factory (#PCDATA)>
+<!ELEMENT resources (#PCDATA)>
+<!ELEMENT resource (#PCDATA)>
+<!ELEMENT auth-challenge (#PCDATA)>
+<!ELEMENT development (authenticator?, listener+)>
+<!ELEMENT production (authenticator?, listener+)>
+<!ELEMENT listener (#PCDATA)>
+<!ELEMENT action (#PCDATA)>
+<!ELEMENT design (action*,auth*,secure*)>
+<!ELEMENT auth (action*,auth*,secure*)>
+<!ELEMENT secure (action*,auth*)>
+
+<!ATTLIST include config CDATA #REQUIRED>
+<!ATTLIST authenticator host CDATA #REQUIRED>
+<!ATTLIST authenticator port CDATA #REQUIRED>
+<!ATTLIST messages file CDATA #REQUIRED>
+<!ATTLIST xstats url CDATA #REQUIRED>
+<!ATTLIST settings file CDATA #REQUIRED>
+<!ATTLIST factory page-root CDATA #REQUIRED>
+<!ATTLIST factory package-prefix CDATA #REQUIRED>
+<!ATTLIST factory meta-data CDATA #REQUIRED>
+<!ATTLIST resources repository CDATA #REQUIRED>
+<!ATTLIST resource name CDATA #REQUIRED>
+<!ATTLIST resource type CDATA #REQUIRED>
+<!ATTLIST resource database CDATA #IMPLIED>
+<!ATTLIST resource server CDATA #IMPLIED>
+<!ATTLIST resource port CDATA #IMPLIED>
+<!ATTLIST resource user CDATA #IMPLIED>
+<!ATTLIST resource password CDATA #IMPLIED>
+<!ATTLIST resource type CDATA #REQUIRED>
+<!ATTLIST auth-challenge page CDATA #REQUIRED>
+<!ATTLIST auth-challenge post-auth-page CDATA #IMPLIED>
+<!ATTLIST auth-challenge password-change-page CDATA #IMPLIED>
+<!ATTLIST listener host CDATA #REQUIRED>
+<!ATTLIST listener port CDATA #REQUIRED>
+<!ATTLIST listener backlog CDATA #IMPLIED>
+<!ATTLIST listener certificate CDATA #IMPLIED>
+<!ATTLIST listener password CDATA #IMPLIED>
+<!ATTLIST design page CDATA #REQUIRED>
+<!ATTLIST design handler CDATA #REQUIRED>
+<!ATTLIST action page CDATA #REQUIRED>
+<!ATTLIST action handler CDATA #REQUIRED>
+<!ATTLIST auth roles CDATA #IMPLIED>

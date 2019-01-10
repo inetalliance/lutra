@@ -1,0 +1,58 @@
+<!ELEMENT lutra-config (include*,messages*,xstats?,factory*,resources*,auth-challenge?,settings?,development?,production?,action*,auth*,design*,secure*)>
+<!ELEMENT include (#PCDATA)>
+<!ELEMENT authenticator (#PCDATA)>
+<!ELEMENT coordinator (#PCDATA)>
+<!ELEMENT messages (#PCDATA)>
+<!ELEMENT xstats (#PCDATA)>
+<!ELEMENT factory (#PCDATA)>
+<!ELEMENT resources (#PCDATA)>
+<!ELEMENT database (#PCDATA)>
+<!ELEMENT memcache (node*)>
+<!ELEMENT node (#PCDATA)>
+<!ELEMENT auth-challenge (#PCDATA)>
+        <!ELEMENT callgrove-messages (#PCDATA)>
+<!ELEMENT integer (#PCDATA)>
+<!ELEMENT string (#PCDATA)>
+<!ELEMENT uri (#PCDATA)>
+<!ELEMENT settings (integer*,string*,uri*)>
+<!ELEMENT development (settings?, database?, memcache?, coordinator?, authenticator?,  listener*)>
+<!ELEMENT production (settings?, database?, memcache?, coordinator?,authenticator?, listener*)>
+<!ELEMENT listener (#PCDATA)>
+<!ELEMENT action (#PCDATA)>
+<!ELEMENT design (action*,auth*,secure*)>
+<!ELEMENT auth (action*,auth*,secure*)>
+<!ELEMENT secure (action*,auth*)>
+
+<!ATTLIST include config CDATA #REQUIRED>
+<!ATTLIST authenticator host CDATA #REQUIRED>
+<!ATTLIST authenticator port CDATA #REQUIRED>
+<!ATTLIST coordinator host CDATA #REQUIRED>
+<!ATTLIST coordinator port CDATA #REQUIRED>
+<!ATTLIST messages file CDATA #REQUIRED>
+<!ATTLIST xstats url CDATA #REQUIRED>
+<!ATTLIST integer name CDATA #REQUIRED>
+<!ATTLIST integer value CDATA #REQUIRED>
+<!ATTLIST string name CDATA #REQUIRED>
+<!ATTLIST string value CDATA #REQUIRED>
+<!ATTLIST uri name CDATA #REQUIRED>
+<!ATTLIST uri value CDATA #REQUIRED>
+<!ATTLIST factory page-root CDATA #REQUIRED>
+<!ATTLIST factory prefix CDATA #IMPLIED>
+<!ATTLIST resources repository CDATA #REQUIRED>
+<!ATTLIST database uri CDATA #REQUIRED>
+<!ATTLIST auth-challenge page CDATA #REQUIRED>
+<!ATTLIST auth-challenge post-auth-page CDATA #IMPLIED>
+<!ATTLIST auth-challenge password-change-page CDATA #IMPLIED>
+        <!ATTLIST callgrove-messages uri CDATA #REQUIRED>
+<!ATTLIST listener host CDATA #REQUIRED>
+<!ATTLIST listener port CDATA #REQUIRED>
+<!ATTLIST listener backlog CDATA #IMPLIED>
+<!ATTLIST listener certificate CDATA #IMPLIED>
+<!ATTLIST listener password CDATA #IMPLIED>
+<!ATTLIST design page CDATA #REQUIRED>
+<!ATTLIST design handler CDATA #REQUIRED>
+<!ATTLIST action page CDATA #REQUIRED>
+<!ATTLIST action handler CDATA #REQUIRED>
+<!ATTLIST auth roles CDATA #IMPLIED>
+<!ATTLIST node name CDATA #REQUIRED>
+<!ATTLIST node weight CDATA #IMPLIED>

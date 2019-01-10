@@ -1,0 +1,5 @@
+<!ELEMENT monitor-config (notifier*)>
+<!ELEMENT notifier (#PCDATA)>
+
+<!ATTLIST notifier type CDATA #REQUIRED>
+<!ATTLIST notifier address CDATA #IMPLIED>

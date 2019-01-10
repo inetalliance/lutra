@@ -1,0 +1,9 @@
+<!ELEMENT clump-config (include*,clump*)>
+<!ELEMENT include (#PCDATA)>
+<!ELEMENT clump (file+)>
+<!ELEMENT file (#PCDATA)>
+<!ELEMENT nocompress EMPTY>
+
+<!ATTLIST include config CDATA #REQUIRED>
+<!ATTLIST clump url CDATA #REQUIRED>
+<!ATTLIST file nocompress CDATA #IMPLIED url CDATA #REQUIRED>

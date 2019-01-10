@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding="US-ASCII"?>
+<!--
+ -
+ - Enhydra Java Application Server Project
+ -
+ - The contents of this file are subject to the Enhydra Public License
+ - Version 1.1 (the "License"); you may not use this file except in
+ - compliance with the License. You may obtain a copy of the License on
+ - the Enhydra web site ( http://www.enhydra.org/ ).
+ -
+ - Software distributed under the License is distributed on an "AS IS"
+ - basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See 
+ - the License for the specific terms governing rights and limitations
+ - under the License.
+ -
+ - The Initial Developer of the Enhydra Application Server is Lutris
+ - Technologies, Inc. The Enhydra Application Server and portions created
+ - by Lutris Technologies, Inc. are Copyright Lutris Technologies, Inc.
+ - All Rights Reserved.
+ -
+ - Contributor(s):
+ -
+ - $Id: xmlc-1.1.dtd,v 1.4 2005/11/19 21:30:41 jkjome Exp $
+ -
+ -->
+
+<!--
+ - XMLC MetaData DTD version 1.1
+ - 
+ - Public Id: -//ENHYDRA//DTD XMLC 1.1//EN
+ - System Id: http://www.enhydra.org/xml/xmlc/xmlc-1.1.dtd
+ -
+ - FIXME: really need to review/update the content models, especially the
+ - <xmlc> one, which allows sections to be repeated that should occur either
+ - zero or one times.
+ -->
+
+<!--
+  - Entities used in defining DTD.
+  -->
+ <!ENTITY % BooleanAttr "(true|false|on|off|yes|no)">
+
+<!--
+ - Document element
+v -->
+  <!ELEMENT xmlc (compileOptions|inputDocument|parser|documentClass|html|domEdits|javaCompiler|document)*>
+
+<!--
+ - Compile options section
+ -->
+  <!ELEMENT compileOptions EMPTY>
+    <!ATTLIST compileOptions verbose %BooleanAttr; #IMPLIED>
+    <!ATTLIST compileOptions printVersion %BooleanAttr; #IMPLIED>
+    <!ATTLIST compileOptions printDocumentInfo %BooleanAttr; #IMPLIED>
+    <!ATTLIST compileOptions printParseInfo %BooleanAttr; #IMPLIED>
+    <!ATTLIST compileOptions printDOM %BooleanAttr; #IMPLIED>
+    <!ATTLIST compileOptions printAccessorInfo %BooleanAttr; #IMPLIED>
+    <!ATTLIST compileOptions keepGeneratedSource %BooleanAttr; #IMPLIED>
+    <!ATTLIST compileOptions createSource %BooleanAttr; "true">
+    <!ATTLIST compileOptions compileSource %BooleanAttr; "true">
+    <!ATTLIST compileOptions sourceOutputRoot CDATA #IMPLIED>
+    <!ATTLIST compileOptions classOutputRoot CDATA #IMPLIED>
+    <!ATTLIST compileOptions documentOutput CDATA #IMPLIED>
+    <!ATTLIST compileOptions warnings %BooleanAttr; "true">
+
+<!--
+ - Input document section
+ -->
+  <!ELEMENT inputDocument (include)*>
+    <!ATTLIST inputDocument url CDATA #IMPLIED>
+    <!ATTLIST inputDocument documentFormat (xml|html|unspecified) #IMPLIED>
+    <!ATTLIST inputDocument processSSI %BooleanAttr; #IMPLIED>
+    <!ATTLIST inputDocument recompileSource CDATA #IMPLIED>
+    <!ATTLIST inputDocument SSIBase CDATA #IMPLIED>
+
+  <!ELEMENT include (include)*>
+    <!ATTLIST include url CDATA #IMPLIED>
+
+<!--
+ - Parser section
+ -->
+  <!ELEMENT xcatalog EMPTY>
+    <!ATTLIST xcatalog url CDATA #IMPLIED>
+
+  <!ELEMENT parser (xcatalog)*>
+    <!ATTLIST parser name (tidy|swing|xerces) #IMPLIED>
+    <!ATTLIST parser validate %BooleanAttr; #IMPLIED>
+    <!ATTLIST parser warnings %BooleanAttr; "true">
+
+<!-- 
+ - Document class section
+ -->
+  <!ELEMENT implements EMPTY>
+    <!ATTLIST implements name CDATA #IMPLIED>
+
+  <!ELEMENT documentClass (implements)*>
+    <!ATTLIST documentClass name CDATA #IMPLIED>
+    <!ATTLIST documentClass generate (class|interface|implementation|both) #IMPLIED>
+    <!ATTLIST documentClass delegateSupport %BooleanAttr; #IMPLIED>
+    <!ATTLIST documentClass createMetaData %BooleanAttr; #IMPLIED>
+    <!ATTLIST documentClass recompilation %BooleanAttr; #IMPLIED>
+    <!ATTLIST documentClass deferParsing %BooleanAttr; #IMPLIED>
+    <!ATTLIST documentClass extends CDATA #IMPLIED>
+    <!ATTLIST documentClass domFactory CDATA #IMPLIED>
+    <!ATTLIST documentClass dom (lazydom|xerces|generic|xhtml|wml|voicexml|chtml) #IMPLIED>
+    <!ATTLIST documentClass createGetTagMethods %BooleanAttr; #IMPLIED>
+    <!ATTLIST documentClass suppressGetElementMethods %BooleanAttr; #IMPLIED>
+    <!ATTLIST documentClass getTagReturnType CDATA #IMPLIED>
+
+<!-- 
+ - HTML section
+ -->
+  <!ELEMENT html (htmlTagSet|htmlTag|htmlAttr|compatibility)*>
+      <!ATTLIST html encoding CDATA #IMPLIED>
+
+  <!ELEMENT htmlTagSet EMPTY>
+      <!ATTLIST htmlTagSet tagSet (cyberstudio) #IMPLIED>
+
+  <!ELEMENT htmlTag EMPTY>
+    <!ATTLIST htmlTag name CDATA #IMPLIED>
+    <!ATTLIST htmlTag inline %BooleanAttr; #IMPLIED>
+    <!ATTLIST htmlTag block %BooleanAttr; #IMPLIED>
+    <!ATTLIST htmlTag empty %BooleanAttr; #IMPLIED>
+    <!ATTLIST htmlTag optclose %BooleanAttr; #IMPLIED>
+
+  <!ELEMENT htmlAttr EMPTY>
+    <!ATTLIST htmlAttr name CDATA #IMPLIED>
+
+  <!ELEMENT compatibility EMPTY>
+    <!ATTLIST compatibility oldClassConstants %BooleanAttr; #IMPLIED>
+    <!ATTLIST compatibility oldNameConstants %BooleanAttr; #IMPLIED>
+
+<!--
+ - DOM editing Section 
+ -->
+  <!ELEMENT domEdits (urlEdit|urlMapping|urlRegExpMapping|deleteElement)*>
+
+  <!ELEMENT urlMapping EMPTY>
+    <!ATTLIST urlMapping newUrl CDATA #IMPLIED>
+    <!ATTLIST urlMapping url CDATA #IMPLIED>
+    <!ATTLIST urlMapping elementIds NMTOKENS #IMPLIED>
+    <!ATTLIST urlMapping elementClasses CDATA #IMPLIED>
+    <!ATTLIST urlMapping elementTags CDATA #IMPLIED>
+    <!ATTLIST urlMapping editAttrs CDATA #IMPLIED>
+
+  <!ELEMENT urlRegExpMapping EMPTY>
+    <!ATTLIST urlRegExpMapping regexp CDATA #IMPLIED>
+    <!ATTLIST urlRegExpMapping subst CDATA #IMPLIED>
+    <!ATTLIST urlRegExpMapping elementIds NMTOKENS #IMPLIED>
+    <!ATTLIST urlRegExpMapping elementClasses CDATA #IMPLIED>
+    <!ATTLIST urlRegExpMapping elementTags CDATA #IMPLIED>
+    <!ATTLIST urlRegExpMapping editAttrs CDATA #IMPLIED>
+
+  <!ELEMENT deleteElement EMPTY>
+    <!ATTLIST deleteElement elementClasses CDATA #IMPLIED>
+    <!ATTLIST deleteElement elementIds NMTOKENS #IMPLIED>
+    <!ATTLIST deleteElement elementClasses CDATA #IMPLIED>
+    <!ATTLIST deleteElement elementTags CDATA #IMPLIED>
+
+<!--
+ - Java Compiler section.
+ -->
+  <!ELEMENT javaCompiler (javacOption)*>
+    <!ATTLIST javaCompiler javac CDATA #IMPLIED>
+
+  <!ELEMENT javacOption EMPTY>
+    <!ATTLIST javacOption name CDATA #IMPLIED>
+    <!ATTLIST javacOption value CDATA #IMPLIED>
+
+<!--
+ - Document section
+ -->
+  <!ELEMENT document (tagClass|elementDef)*>
+
+  <!ELEMENT elementDef (elementDef*)>
+    <!ATTLIST elementDef elementId NMTOKEN #IMPLIED>
+    <!ATTLIST elementDef tagNames CDATA #IMPLIED>
+    <!ATTLIST elementDef domType NMTOKEN #IMPLIED>
+    <!ATTLIST elementDef javaName CDATA #IMPLIED>
+    <!ATTLIST elementDef createSetText %BooleanAttr; #IMPLIED>
+    <!ATTLIST elementDef createGetElement %BooleanAttr; #IMPLIED>
+    <!ATTLIST elementDef optional %BooleanAttr; #IMPLIED>
+
+  <!ELEMENT tagClass EMPTY>
+    <!ATTLIST tagClass tagName CDATA #IMPLIED>
+    <!ATTLIST tagClass attrName CDATA #IMPLIED>
+
+<!--
+  - These command line options control the XMLC program (not the classes that
+  - implement the API). They are not (currently) available in the meta-data
+  - file.
+  -   -sourceout
+  -   -docout
+  -   -inputFile.
+  -->

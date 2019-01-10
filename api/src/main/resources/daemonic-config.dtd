@@ -1,0 +1,17 @@
+<!ELEMENT daemonic-config (import?, (var|arg|javaArg)*, development?, production?, (app|copy)*)>
+<!ELEMENT import (#PCDATA)>
+<!ELEMENT app ((var|arg|javaArg)*, development?, production?)>
+<!ELEMENT copy ((var|arg|javaArg)*, development?, production?)>
+<!ELEMENT var (#PCDATA)>
+<!ELEMENT arg (#PCDATA)>
+<!ELEMENT javaArg (#PCDATA)>
+<!ELEMENT development ((var|arg|javaArg)*)>
+<!ELEMENT production ((var|arg|javaArg)*,host*)>
+<!ELEMENT host (#PCDATA)>
+
+<!ATTLIST app id ID #REQUIRED main CDATA #REQUIRED>
+<!ATTLIST copy from IDREF #REQUIRED id ID #REQUIRED>
+<!ATTLIST var name CDATA #REQUIRED>
+<!ATTLIST arg name CDATA #REQUIRED>
+<!ATTLIST javaArg name CDATA #REQUIRED>
+
