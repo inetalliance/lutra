@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Stream.of;
+import static net.inetalliance.funky.Funky.throwing;
 import static net.inetalliance.lutra.elements.Attribute.*;
 
 public abstract class Element implements Cloneable {
@@ -84,8 +85,8 @@ public abstract class Element implements Cloneable {
 		return null;
 	}
 
-	private static void outputAttribute(final StringBuilder output, final Attribute key,
-	                                    final String attributeValue) {
+	private static void outputAttribute(final Appendable output, final Attribute key,
+	                                    final String attributeValue) throws IOException {
 		final String trimmedValue = attributeValue.trim();
 		output.append(' ').append(key.toString()).append("=\"");
 		final String escaped = Escaper.html40.escape(trimmedValue);
@@ -287,7 +288,7 @@ public abstract class Element implements Cloneable {
 		final Element clone;
 		if (elementsToRemove.length == 0) {
 			// if none specified, check all descendants
-			clone = cloneWithListeners(Collections.<CloneListener>emptyList());
+			clone = cloneWithListeners(List.of());
 			Funky.stream(clone.getTree()).filter(predicate).forEach(functor);
 		} else {
 			final Collection<InstanceListener> listeners = new ArrayList<>(elementsToRemove.length);
@@ -305,7 +306,7 @@ public abstract class Element implements Cloneable {
 	 * @return an iterable including this element and all its descendants.
 	 */
 	public Iterable<Element> getTree() {
-		return FunctorBreadthFirstIterator.iterable(this, Element::getChildren);
+		return () -> new FunctorBreadthFirstIterator<>(this, e -> e.getChildren().iterator());
 	}
 
 	@SuppressWarnings({"unchecked"})
@@ -466,7 +467,7 @@ public abstract class Element implements Cloneable {
 	 * @return an iterable including this element's descendants.
 	 */
 	public Iterable<Element> getDescendants() {
-		return FunctorBreadthFirstIterator.iterable(children, Element::getChildren);
+		return ()-> new FunctorBreadthFirstIterator<>(children, Element::getChildren);
 	}
 
 	public Integer getHeightStyle() {
@@ -504,26 +505,18 @@ public abstract class Element implements Cloneable {
 	}
 
 	public Iterable<Element> getSiblingsAfter() {
-		return new Iterable<Element>() {
-			@Override
-			public Iterator<Element> iterator() {
-				final ChildIterator iterator = new ChildIterator(parent);
-				while (iterator.hasNext()) {
-					if (Element.this.equals(iterator.next()))
-						break;
-				}
-				return iterator;
+		return () -> {
+			final ChildIterator iterator = new ChildIterator(parent);
+			while (iterator.hasNext()) {
+				if (Element.this.equals(iterator.next()))
+					break;
 			}
+			return iterator;
 		};
 	}
 
 	public Iterable<Element> getSiblingsBefore() {
-		return new Iterable<Element>() {
-			@Override
-			public Iterator<Element> iterator() {
-				return new UnmodifiableIterator<>(new ReverseListIterator<>(parent.children, Element.this));
-			}
-		};
+		return () -> new UnmodifiableIterator<>(new ReverseListIterator<>(parent.children, Element.this));
 	}
 
 	public Map<String, String> getStyles() {
@@ -791,7 +784,7 @@ public abstract class Element implements Cloneable {
 		return output.toString();
 	}
 
-	public boolean toString(final StringBuilder output, final boolean pretty, final int depth,
+	public boolean toString(final Appendable output, final boolean pretty, final int depth,
 	                        final ElementType previous,
 	                        final ElementType next)
 		throws IOException {
@@ -808,7 +801,7 @@ public abstract class Element implements Cloneable {
 			output.append(" itemscope");
 		}
 		attributes.entrySet().stream().filter(filter).forEach(
-			entry -> outputAttribute(output, entry.getKey(), entry.getValue()));
+			throwing( entry -> outputAttribute(output, entry.getKey(), entry.getValue())));
 		if (data != null) {
 			for (Map.Entry<String, Object> entry : data.entrySet()) {
 				if (entry.getKey().startsWith("data-"))
@@ -838,7 +831,7 @@ public abstract class Element implements Cloneable {
 		return !type.isInline();
 	}
 
-	protected boolean outputChild(final StringBuilder output, final Element child, final boolean pretty,
+	protected boolean outputChild(final Appendable output, final Element child, final boolean pretty,
 	                              final int depth, final ElementType previous, final ElementType next)
 		throws IOException {
 		return child.toString(output, pretty, depth + 1, previous, next);

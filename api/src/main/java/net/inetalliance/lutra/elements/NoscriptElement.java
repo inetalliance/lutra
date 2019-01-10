@@ -14,7 +14,7 @@ public class NoscriptElement extends CommonAbstractElement<NoscriptElement> impl
 	}
 
 	@Override
-	public boolean toString(final StringBuilder output, final boolean pretty, final int depth,
+	public boolean toString(final Appendable output, final boolean pretty, final int depth,
 	                        final ElementType previous, final ElementType next)
 			throws IOException
 	{

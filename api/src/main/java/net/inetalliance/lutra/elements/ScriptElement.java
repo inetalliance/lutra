@@ -72,7 +72,7 @@ public class ScriptElement extends Element implements HeadElementChild, BlockEle
 	}
 
 	@Override
-	protected boolean outputChild(final StringBuilder output, final Element child, final boolean pretty,
+	protected boolean outputChild(final Appendable output, final Element child, final boolean pretty,
 	                              final int depth, final ElementType previous, final ElementType next)
 		throws IOException {
 		final boolean hasSrc = getSrc() != null;
