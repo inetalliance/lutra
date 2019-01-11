@@ -4,8 +4,6 @@ import net.inetalliance.funky.Escaper
 import net.inetalliance.funky.Funky
 import net.inetalliance.funky.StringFun
 import net.inetalliance.funky.iterators.BreadthFirstFileIterator
-import net.inetalliance.lutra.DocumentBuilder
-import net.inetalliance.lutra.LazyDocument
 import net.inetalliance.lutra.elements.Attribute
 import net.inetalliance.lutra.elements.Element
 import net.inetalliance.lutra.elements.HtmlElement
@@ -334,7 +332,7 @@ class LutraTask extends DefaultTask {
       final String id = variables.get(variable)
       if (ids.length() > 0)
         ids.append(",\n\t\t")
-      final String enumValue = StringFun.decamel(variable).toUpperCase().replaceAll(' ', '_');
+      final String enumValue = StringFun.decamel(variable).toUpperCase().replaceAll(' ', '_')
       ids.append(enumValue)
       final Element element = map.get(id)
       final String location = element.getLocation().toString()
@@ -342,14 +340,11 @@ class LutraTask extends DefaultTask {
       out.append(String.format(tag, Element.class.getSimpleName(), variable, choppedLocation, DATE_FORMAT.format(now)))
       constructor.append("\t\t\t").append(variable).append(" = document.getById(\"").append(id).append("\");\n")
       constructor.append("\t\t\t").append("map.put(Id.").append(enumValue).append(", ").append(variable).append(");\n")
-      log.info("me:" + map.get(id).type + map.get(id))
-      log.info("ec:" + id + ":" + element.getClass().getName())
-      log.info("et:" + (element.type == null))
       casters.append(String.format(caster,
           element.getClass().getSimpleName(),
           variable,
-          element.type,
-          StringFun.titleCase(element.type.toString()),
+          element.@type,
+          StringFun.titleCase(element.@type.toString()),
           choppedLocation,
           DATE_FORMAT.format(now),
           element.escapeAbbreviated()))
