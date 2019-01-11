@@ -72,9 +72,9 @@ class LutraTask extends DefaultTask {
     }
 
 
-    Funky.stream({ ->new BreadthFirstFileIterator(root)})
+    Funky.stream({ -> new BreadthFirstFileIterator(root) })
         .filter(ContentType.HTML.filePredicate)
-        .filter (exclude)
+        .filter(exclude)
         .forEach({ genInput ->
       try {
         final String filePath = genInput.getAbsolutePath().replace(root.getAbsolutePath(), "")
@@ -105,17 +105,18 @@ class LutraTask extends DefaultTask {
       throw new TaskExecutionException(this, new IllegalArgumentException("source errors"))
     }
   }
+
   void generate(final String packageName, final File input, final String filePath,
-                       final Collection<String> parseErrors, final Collection<String> validationErrors,
-                       final boolean preparsed)
+                final Collection<String> parseErrors, final Collection<String> validationErrors,
+                final boolean preparsed)
       throws IOException, SAXException {
     generate(outputDirectory, packageName, input, filePath, parseErrors, validationErrors, preparsed)
   }
+
   File generate(final File outputDirectory, final String packageName, final File input,
                 final String filePath, final Collection<String> parseErrors,
                 final Collection<String> validationErrors, final boolean preparsed)
-      throws IOException, SAXException
-  {
+      throws IOException, SAXException {
     def log = getLogger()
     final File outputDir = makeOutputDir(outputDirectory, packageName)
     if (log.isDebugEnabled())
@@ -126,25 +127,21 @@ class LutraTask extends DefaultTask {
     final File file = new File(outputDir, name + ".java")
     if (log.isDebugEnabled())
       log.debug(String.format("src: %s", file.getAbsolutePath()))
-    if (file.exists() && file.lastModified() > input.lastModified())
-    {
+    if (file.exists() && file.lastModified() > input.lastModified()) {
       if (log.isDebugEnabled())
         log.debug(String.format("%s is not modified", file.getAbsolutePath()))
       return file
-    }
-    else
+    } else
       log.info(String.format("Generating %s API for %s", preparsed ? "pre-parsed" : "lazy-parsed", input.getAbsolutePath()))
     if (!file.getParentFile().exists() && !file.getParentFile().mkdirs())
       log.error(String.format("Could not make parent dir %s", file.getParentFile().getAbsolutePath()))
 
     final DocumentBuilder builder = new DocumentBuilder(input)
-    try
-    {
+    try {
       log.debug("parsing")
       builder.parse()
     }
-    catch (SAXException e)
-    {
+    catch (SAXException e) {
       log.debug("sax failed", e)
       file.deleteOnExit()
       parseErrors.add(e.getMessage())
@@ -153,22 +150,19 @@ class LutraTask extends DefaultTask {
 
     log.debug("validating")
     final ValidationErrors errors = builder.validate(false)
-    if (errors.isEmpty())
-    {
+    if (errors.isEmpty()) {
       log.debug("passed")
       if (file.exists() && !file.canWrite())
         if (!file.setWritable(true))
           log.error("could not set file as writable")
       final BufferedWriter out = new BufferedWriter(new FileWriter(file))
-      try
-      {
+      try {
         final Map<String, Element> byId = builder.getById()
 
         out.append("package ").append(packageName).append(";\n\n")
-        if (preparsed)
-        {
+        if (preparsed) {
           final LazyDocument document = builder.buildGeneric()
-          final Set<Class> imports = new TreeSet<>({a,b -> a.name.compareTo(b.name)})
+          final Set<Class> imports = new TreeSet<>({ a, b -> a.name.compareTo(b.name) })
           final StringBuilder cls = new StringBuilder(1024)
           imports.add(HtmlElement.class)
           imports.add(Attribute.class)
@@ -191,8 +185,7 @@ class LutraTask extends DefaultTask {
           cls.append(";\n\t\tbody = ")
           generatePreparsed(cls, imports, document.body, "\t\t\t")
           cls.append(";\n\t\taddChild(head, body);")
-          for (final Map.Entry<Attribute, String> entry : document.root.getAttributes().entrySet())
-          {
+          for (final Map.Entry<Attribute, String> entry : document.root.getAttributes().entrySet()) {
             cls.append("\n\t\tsetAttribute(Attribute.")
             cls.append(entry.getKey().name()).append(", \"")
             cls.append(Escaper.javaString.escape(entry.getValue())).append("\");")
@@ -203,9 +196,7 @@ class LutraTask extends DefaultTask {
           for (final Class imported : imports)
             addImport(out, imported)
           out.append(cls)
-        }
-        else
-        {
+        } else {
           addImport(out, LazyDocument.class)
           addImport(out, DocumentBuilder.class)
           addImport(out, Element.class)
@@ -213,10 +204,8 @@ class LutraTask extends DefaultTask {
           addImport(out, EnumMap.class)
           addImport(out, Map.class)
           final Set<Class> elementTypes = new HashSet<>(byId.size())
-          for (final Element element : byId.values())
-          {
-            if (!elementTypes.contains(element.getClass()))
-            {
+          for (final Element element : byId.values()) {
+            if (!elementTypes.contains(element.getClass())) {
               elementTypes.add(element.getClass())
               addImport(out, element.getClass())
             }
@@ -250,46 +239,37 @@ class LutraTask extends DefaultTask {
         }
         return file
       }
-      catch (IOException ignored)
-      {
+      catch (IOException ignored) {
         file.deleteOnExit()
       }
-      finally
-      {
+      finally {
         out.close()
         if (!file.setWritable(false))
           log.debug("unset writable failed")
       }
-    }
-    else
-    {
+    } else {
       log.debug("failed")
       file.deleteOnExit()
       errors.toString(validationErrors)
     }
     return null
   }
-  private static void generatePreparsed(final Appendable cls, final Set<Class> imports, final Element element, final String indent) throws IOException
-  {
+
+  private static void generatePreparsed(final Appendable cls, final Set<Class> imports, final Element element, final String indent) throws IOException {
     imports.add(element.getClass())
     if (element instanceof TextContent)
       cls.append("new TextContent(\"").append(Escaper.javaString.escape(element.getText())).append("\")")
-    else
-    {
+    else {
       if (!element.getAttributes().isEmpty())
         cls.append('(').append(element.getClass().getSimpleName()).append(") ")
       cls.append("new ").append(element.getClass().getSimpleName()).append('(')
       final List<Element> children = element.getChildren()
-      if (children.size() == 1 && children.get(0) instanceof TextContent)
-      {
+      if (children.size() == 1 && children.get(0) instanceof TextContent) {
         cls.append('"').append(Escaper.javaString.escape(children.get(0).getText())).append('"')
-      }
-      else
-      {
+      } else {
         if (children.size() > 1)
           cls.append('\n').append(indent)
-        for (Iterator<Element> iterator = children.iterator(); iterator.hasNext(); )
-        {
+        for (Iterator<Element> iterator = children.iterator(); iterator.hasNext();) {
           final Element child = iterator.next()
           generatePreparsed(cls, imports, child, indent + "\t")
           if (iterator.hasNext())
@@ -297,8 +277,7 @@ class LutraTask extends DefaultTask {
         }
       }
       cls.append(')')
-      for (final Map.Entry<Attribute, String> entry : element.getAttributes().entrySet())
-      {
+      for (final Map.Entry<Attribute, String> entry : element.getAttributes().entrySet()) {
         cls.append('\n').append(indent).append('\t')
         cls.append(".setAttribute(Attribute.").append(entry.getKey().name())
         cls.append(", \"").append(entry.getValue()).append("\")")
@@ -308,12 +287,10 @@ class LutraTask extends DefaultTask {
   private static final Pattern dotPattern = Pattern.compile("\\.")
   private static final Pattern invalidCharactersPattern = Pattern.compile("[.\\-_:]")
 
-  private File makeOutputDir(final File outputRoot, final String packageName)
-  {
+  private File makeOutputDir(final File outputRoot, final String packageName) {
     final String[] dirs = dotPattern.split(packageName)
     File parent = outputRoot
-    for (final String dir : dirs)
-    {
+    for (final String dir : dirs) {
       final File childDir = new File(parent, dir)
       if (!childDir.exists() && !childDir.mkdir())
         getLogger().error("could not create child dir")
@@ -322,8 +299,7 @@ class LutraTask extends DefaultTask {
     return parent
   }
 
-  static String filenameToClassName(final String filename)
-  {
+  static String filenameToClassName(final String filename) {
     if (!filename.endsWith(".html"))
       throw new IllegalArgumentException("Expecting .html files!")
     final String withoutExtension = filename.substring(0, filename.length() - 5)
@@ -333,8 +309,7 @@ class LutraTask extends DefaultTask {
   public static final DateFormat DATE_FORMAT = new SimpleDateFormat(
       "yyyy-MM-dd HH:mm:ss")  // avoiding dependency on joda-time
   private void generateTagsClass(final BufferedWriter out, final Map<String, Element> map, final String name)
-      throws IOException
-  {
+      throws IOException {
     def log = getLogger()
     log.debug(String.format("generating tags class: %s", name))
     out.append("\tpublic static final class Tags extends ElementBundle\n").
@@ -344,8 +319,7 @@ class LutraTask extends DefaultTask {
     final StringBuilder ids = new StringBuilder(1024)
     final StringBuilder casters = new StringBuilder(1024)
     final Map<String, String> variables = new HashMap<>(8)
-    for (final Map.Entry<String, Element> entry : map.entrySet())
-    {
+    for (final Map.Entry<String, Element> entry : map.entrySet()) {
       final String id = entry.getKey()
       final String variable = idToVariable(id)
       final String previous = variables.put(variable, id)
@@ -356,12 +330,11 @@ class LutraTask extends DefaultTask {
     final Date now = new Date()
     final List<String> variableNames = new ArrayList<>(variables.keySet())
     Collections.sort(variableNames)
-    for (final String variable : variableNames)
-    {
+    for (final String variable : variableNames) {
       final String id = variables.get(variable)
       if (ids.length() > 0)
         ids.append(",\n\t\t")
-      final String enumValue = StringFun.decamel(variable)
+      final String enumValue = StringFun.decamel(variable).toUpperCase().replaceAll(' ', '_');
       ids.append(enumValue)
       final Element element = map.get(id)
       final String location = element.getLocation().toString()
@@ -369,8 +342,8 @@ class LutraTask extends DefaultTask {
       out.append(String.format(tag, Element.class.getSimpleName(), variable, choppedLocation, DATE_FORMAT.format(now)))
       constructor.append("\t\t\t").append(variable).append(" = document.getById(\"").append(id).append("\");\n")
       constructor.append("\t\t\t").append("map.put(Id.").append(enumValue).append(", ").append(variable).append(");\n")
-      log.info("me:" +map.get(id).type+map.get(id))
-      log.info("ec:" + id+":"+element.getClass().getName())
+      log.info("me:" + map.get(id).type + map.get(id))
+      log.info("ec:" + id + ":" + element.getClass().getName())
       log.info("et:" + (element.type == null))
       casters.append(String.format(caster,
           element.getClass().getSimpleName(),
@@ -452,17 +425,14 @@ class LutraTask extends DefaultTask {
     // add more here as necessary
   }
 
-  private static String replaceKeywords(final String variable)
-  {
+  private static String replaceKeywords(final String variable) {
     return keywords.contains(variable) ? '_' + variable : variable
   }
 
-  private String idToVariable(final String id)
-  {
+  private String idToVariable(final String id) {
     final String[] tokens = invalidCharactersPattern.split(id)
     final StringBuilder result = new StringBuilder(id.length())
-    for (int i = 0; i < tokens.length; i++)
-    {
+    for (int i = 0; i < tokens.length; i++) {
       final String token = tokens[i]
       if (i == 0)
         result.append(Character.toLowerCase(token.charAt(0)))
@@ -476,8 +446,7 @@ class LutraTask extends DefaultTask {
   }
 
   private static void addImport(final Appendable out, final Class type)
-      throws IOException
-  {
+      throws IOException {
     out.append("import ").append(type.getName()).append(";\n")
   }
 
