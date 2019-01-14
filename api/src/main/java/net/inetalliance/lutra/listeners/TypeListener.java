@@ -15,7 +15,7 @@ public class TypeListener implements CloneListener
 
 	public void cloned(final Element src, final Element dest)
 	{
-		if (dest.type == type)
+		if (dest.elementType == type)
 			element = dest;
 	}
 

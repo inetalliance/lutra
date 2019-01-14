@@ -19,6 +19,6 @@ public class MayNotHaveDescendant extends ChildRule
 	{
 		final Element descendant = parent.getFirstDescendantOfType(descendantTypes);
 		if (descendant != null)
-			errors.add(parent, String.format("Element of type %s may not contain an element of type %s at any depth", parent.type, descendant.type));
+			errors.add(parent, String.format("Element of type %s may not contain an element of type %s at any depth", parent.elementType, descendant.elementType));
 	}
 }

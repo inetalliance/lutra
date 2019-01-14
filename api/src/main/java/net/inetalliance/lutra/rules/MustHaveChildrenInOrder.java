@@ -22,9 +22,9 @@ public class MustHaveChildrenInOrder extends ChildRule
 		final Iterator<Element> childIterator = children.iterator();
 		for (final ElementType type : childTypes)
 		{
-			if (!childIterator.hasNext() || childIterator.next().type != type)
+			if (!childIterator.hasNext() || childIterator.next().elementType != type)
 			{
-				errors.add(parent, String.format("Element of type %s must contain the following children, in order: %s", parent.type, Arrays.toString(childTypes)));
+				errors.add(parent, String.format("Element of type %s must contain the following children, in order: %s", parent.elementType, Arrays.toString(childTypes)));
 				break;
 			}
 		}

@@ -20,7 +20,7 @@ public class NoAttributes extends AttributeRule
 		    (strict && !attributes.isEmpty()) ||
 		    (!strict && attributes.size() == 1 && attributes.keySet().iterator().next() != Attribute.ID))
 		{
-			errors.add(parent, String.format("Element of type %s may not have any attributes", parent.type));
+			errors.add(parent, String.format("Element of type %s may not have any attributes", parent.elementType));
 		}
 	}
 }

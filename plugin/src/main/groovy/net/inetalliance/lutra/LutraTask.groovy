@@ -343,8 +343,8 @@ class LutraTask extends DefaultTask {
       casters.append(String.format(caster,
           element.getClass().getSimpleName(),
           variable,
-          element.@type,
-          StringFun.titleCase(element.@type.toString()),
+          element.@elementType,
+          StringFun.titleCase(element.@elementType.toString()),
           choppedLocation,
           DATE_FORMAT.format(now),
           element.escapeAbbreviated()))

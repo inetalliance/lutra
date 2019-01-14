@@ -21,7 +21,7 @@ public class MayHaveAttribute extends AttributeRule
 		for (final Attribute attribute : attributes.keySet())
 		{
 			if (!this.attributes.contains(attribute))
-				errors.add(parent, String.format("Element of type %s may not contain attribute: %s", parent.type, attribute));
+				errors.add(parent, String.format("Element of type %s may not contain attribute: %s", parent.elementType, attribute));
 		}
 	}
 }

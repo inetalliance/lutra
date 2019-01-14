@@ -24,7 +24,7 @@ public class NoscriptElement extends CommonAbstractElement<NoscriptElement> impl
 			final boolean tab = pretty && needsTab();
 			if (tab)
 				tab(output, depth);
-			output.append("</").append(type.toString()).append(">");
+			output.append("</").append(elementType.toString()).append(">");
 			return tab;
 		}
 		else

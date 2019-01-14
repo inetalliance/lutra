@@ -21,13 +21,13 @@ public class MustHaveAtLeastOneChildOf extends ChildRule
 		{
 			for (final ElementType type : childTypes)
 			{
-				if (child.type == type)
+				if (child.elementType == type)
 				{
 					return;
 				}
 			}
 		}
-		errors.add(parent, String.format("Element of type %s must contain at least one of: %s", parent.type, childTypesToString()));
+		errors.add(parent, String.format("Element of type %s must contain at least one of: %s", parent.elementType, childTypesToString()));
 	}
 
 	private String childTypesToString()

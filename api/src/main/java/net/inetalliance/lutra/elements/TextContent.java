@@ -85,7 +85,7 @@ public class TextContent extends Element
 
 	@Override
 	public String toString() {
-		return getParent().type == ElementType.SCRIPT ? content : Escaper.html40.escape(content);
+		return getParent().elementType == ElementType.SCRIPT ? content : Escaper.html40.escape(content);
 	}
 
 	@Override

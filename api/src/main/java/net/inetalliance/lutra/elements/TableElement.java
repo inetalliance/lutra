@@ -27,7 +27,7 @@ public class TableElement extends CommonAbstractElement<TableElement> implements
 							boolean foundTr = false;
 							for (final Element child : children)
 							{
-								final boolean inCapColColgroup = capColColgroup.contains(child.type);
+								final boolean inCapColColgroup = capColColgroup.contains(child.elementType);
 								if (!seenNonCaption && !inCapColColgroup)
 									seenNonCaption = true;
 								else if (seenNonCaption && inCapColColgroup)
@@ -35,7 +35,7 @@ public class TableElement extends CommonAbstractElement<TableElement> implements
 								final String onlyOnce = "%s may only have one child of type %s";
 								final String needAnother = "%s may only have a %s if it also has a %s";
 								final String excludes = "%s may only have a %s if it does not also have a %s";
-								switch (child.type)
+								switch (child.elementType)
 								{
 									case THEAD:
 										if (foundThead)

@@ -13,7 +13,7 @@ public class XhtmlTest extends TestCase
 			if (type != ElementType.TEXTCONTENT)
 			{
 				final Element element = type.create();
-				assertEquals("Constructor type problem: " + element.getClass().getSimpleName(), type, element.type);
+				assertEquals("Constructor type problem: " + element.getClass().getSimpleName(), type, element.elementType);
 			}
 		}
 	}

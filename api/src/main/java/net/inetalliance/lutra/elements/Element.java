@@ -41,7 +41,7 @@ public abstract class Element implements Cloneable {
 	private static final Pattern EDIT_IN_PLACE_CLASS_PATTERN = Pattern.compile("eip_.+_.+");
 	private static final String EDIT_IN_PLACE_CLASS_FORMAT = "eip_%s_%s";
 	private static Pattern cssPixels = Pattern.compile("([0-9]+)px");
-	public final ElementType type;
+	public final ElementType elementType;
 	private final Map<Attribute, String> attributes;
 	private final ChildRule[] childRules;
 	private final AttributeRule[] attributeRules;
@@ -51,12 +51,12 @@ public abstract class Element implements Cloneable {
 	private Map<String, Object> data;
 	private HashMap<String, Method> dataCloneMethods;
 
-	protected Element(final ElementType type, final ChildRule[] childRules, final AttributeRule[] attributeRules,
+	protected Element(final ElementType elementType, final ChildRule[] childRules, final AttributeRule[] attributeRules,
 	                  final Child... children) {
-		if (type == null) {
+		if (elementType == null) {
 			throw new IllegalArgumentException("Element type must not be null");
 		}
-		this.type = type;
+		this.elementType = elementType;
 		this.childRules = childRules;
 		this.attributeRules = attributeRules;
 		attributes = new EnumMap<>(Attribute.class);
@@ -103,7 +103,7 @@ public abstract class Element implements Cloneable {
 
 	public static boolean containsOfType(final Collection<Element> elements, final ElementType type) {
 		for (final Element element : elements) {
-			if (element.type == type)
+			if (element.elementType == type)
 				return true;
 		}
 		return false;
@@ -232,12 +232,12 @@ public abstract class Element implements Cloneable {
 
 	public Element setTitle(final String title) {
 		throw new UnsupportedOperationException(
-			String.format("Element of type %s cannot have attribute %s", type, TITLE));
+			String.format("Element of type %s cannot have attribute %s", elementType, TITLE));
 	}
 
 	public Element addClass(final String... cssClasses) {
 		throw new UnsupportedOperationException(
-			String.format("Elements of type %s cannot have a %s attribute", type, CLASS));
+			String.format("Elements of type %s cannot have a %s attribute", elementType, CLASS));
 	}
 
 	public Element show() {
@@ -311,7 +311,7 @@ public abstract class Element implements Cloneable {
 
 	@SuppressWarnings({"unchecked"})
 	public Element cloneWithListeners(final Iterable<? extends CloneListener> listeners) {
-		final Element clone = type.create();
+		final Element clone = elementType.create();
 		clone.attributes.putAll(attributes);
 		for (final Element child : children)
 			clone.addChild(child.cloneWithListeners(listeners));
@@ -377,7 +377,7 @@ public abstract class Element implements Cloneable {
 
 	public String toStringAbbreviated() {
 		final StringBuilder output = new StringBuilder(32);
-		output.append('<').append(type);
+		output.append('<').append(elementType);
 		for (final Map.Entry<Attribute, String> entry : attributes.entrySet()) {
 			final String attributeValue = entry.getValue();
 			final String trimmedValue = attributeValue.trim();
@@ -390,7 +390,7 @@ public abstract class Element implements Cloneable {
 		if (isClosed())
 			output.append('/');
 		else
-			output.append(">...</").append(type);
+			output.append(">...</").append(elementType);
 		output.append('>');
 		return output.toString();
 	}
@@ -454,7 +454,7 @@ public abstract class Element implements Cloneable {
 	public Element getFirstDescendantOfType(final ElementType... types) {
 		for (final Element descendant : getDescendants()) {
 			for (final ElementType type : types) {
-				if (descendant.type == type)
+				if (descendant.elementType == type)
 					return descendant;
 			}
 		}
@@ -764,7 +764,7 @@ public abstract class Element implements Cloneable {
 
 	public void toJavascriptFunction(final StringBuilder javascript) {
 		javascript.append("function() {\n");
-		javascript.append("var node = document.createElement('").append(type.name).append("');\n");
+		javascript.append("var node = document.createElement('").append(elementType.name).append("');\n");
 		for (final Map.Entry<Attribute, String> entry : attributes.entrySet())
 			javascript.append("node.setAttribute('").append(entry.getKey().name).append("','").append(
 				entry.getValue()).append("');\n");
@@ -791,7 +791,7 @@ public abstract class Element implements Cloneable {
 		final boolean tab = pretty && needsTab();
 		if (tab)
 			tab(output, depth);
-		output.append('<').append(type.toString());
+		output.append('<').append(elementType.toString());
 		Predicate<? super Map.Entry<Attribute, ?>> filter = i -> true;
 		if (attributes.containsKey(ITEMTYPE)) {
 			if (attributes.containsKey(ITEMPROP)) {
@@ -816,19 +816,19 @@ public abstract class Element implements Cloneable {
 			for (int i = 0; i < children.size(); i++) {
 				final Element child = children.get(i);
 				ourChildrenTabbed |= outputChild(output, child, pretty, depth,
-					i > 0 ? children.get(i - 1).type : null,
-					i + 1 < children.size() ? children.get(i + 1).type : null);
+					i > 0 ? children.get(i - 1).elementType : null,
+					i + 1 < children.size() ? children.get(i + 1).elementType : null);
 			}
 			if (ourChildrenTabbed)
 				tab(output, depth);
-			output.append("</").append(type.toString());
+			output.append("</").append(elementType.toString());
 		}
 		output.append('>');
 		return tab;
 	}
 
 	protected boolean needsTab() {
-		return !type.isInline();
+		return !elementType.isInline();
 	}
 
 	protected boolean outputChild(final Appendable output, final Element child, final boolean pretty,
@@ -869,7 +869,7 @@ public abstract class Element implements Cloneable {
 
 	public Element setId(final String value) {
 		throw new UnsupportedOperationException(
-			String.format("Element of type %s cannot have attribute %s", type, TITLE));
+			String.format("Element of type %s cannot have attribute %s", elementType, TITLE));
 	}
 
 

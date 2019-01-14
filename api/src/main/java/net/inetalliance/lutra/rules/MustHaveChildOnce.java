@@ -21,15 +21,15 @@ public class MustHaveChildOnce extends ChildRule
 		final String message = "Element of type %s must contain exactly one %s";
 		for (final Element child : children)
 		{
-			if (child.type == childType)
+			if (child.elementType == childType)
 			{
 				if (has)
-					errors.add(parent, String.format(message, parent.type, childType));
+					errors.add(parent, String.format(message, parent.elementType, childType));
 				else
 					has = true;
 			}
 		}
 		if (!has)
-			errors.add(parent, String.format(message, parent.type, childType));
+			errors.add(parent, String.format(message, parent.elementType, childType));
 	}
 }

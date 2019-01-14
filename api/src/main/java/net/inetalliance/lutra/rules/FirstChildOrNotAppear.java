@@ -21,13 +21,13 @@ public class FirstChildOrNotAppear extends ChildRule
 		if (!children.isEmpty())
 		{
 			final Iterator<Element> iterator = children.iterator();
-			if (iterator.next().type == type)
+			if (iterator.next().elementType == type)
 				return;
 			while (iterator.hasNext())
 			{
-				if (iterator.next().type == type)
+				if (iterator.next().elementType == type)
 				{
-					errors.add(parent, String.format("Element of type %s may only contain one element of type %s, and it must be the first child.", parent.type, type));
+					errors.add(parent, String.format("Element of type %s may only contain one element of type %s, and it must be the first child.", parent.elementType, type));
 					return;
 				}
 			}

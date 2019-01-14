@@ -20,8 +20,8 @@ public class MayHaveChild extends ChildRule
 	{
 		for (final Element child : children)
 		{
-			if (!childTypes.contains(child.type))
-				errors.add(child, String.format("Element of type %s may not contain a child of type %s", parent.type, child.type));
+			if (!childTypes.contains(child.elementType))
+				errors.add(child, String.format("Element of type %s may not contain a child of type %s", parent.elementType, child.elementType));
 		}
 	}
 }

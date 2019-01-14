@@ -511,7 +511,7 @@ public enum ElementType {
 
 	ElementType() {
 		name = name().toLowerCase();
-		predicate = object -> object.type == ElementType.this;
+		predicate = object -> object.elementType == ElementType.this;
 	}
 
 	public final boolean isInline() {
