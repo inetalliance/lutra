@@ -942,4 +942,17 @@ public abstract class Element implements Cloneable {
 			return builder.toString();
 		}
 	}
+
+	public static void removeAll(final Element ... elements) {
+		Funky.nonNull(elements).forEach(Element::remove);
+	}
+	public static void removeIds(final Element ... elements) {
+		Funky.nonNull(elements).forEach(Element::removeId);
+	}
+	public static void hideAll(final Element ... elements) {
+		Funky.nonNull(elements).forEach(Element::hide);
+	}
+	public static void showAll(final Element ... elements) {
+		Funky.nonNull(elements).forEach(Element::show);
+	}
 }
