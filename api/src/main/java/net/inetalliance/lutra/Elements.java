@@ -3,7 +3,7 @@ package net.inetalliance.lutra;
 import net.inetalliance.funky.Funky;
 import net.inetalliance.lutra.elements.Element;
 
-interface Elements {
+public interface Elements {
 	static void remove(final Element... elements) {
 		Funky.nonNull(elements).forEach(Element::remove);
 	}
