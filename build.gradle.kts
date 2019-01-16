@@ -13,6 +13,15 @@ subprojects {
         options.compilerArgs.add("-Werror")
         options.compilerArgs.add("-Xlint")
     }
+    tasks {
+        val sourcesJar by creating(Jar::class) {
+            archiveClassifier.set("sources")
+            from(sourceSets.main.get().allSource)
+        }
+        artifacts {
+            add("archives", sourcesJar)
+        }
+    }
     apply(plugin = "maven")
     apply(plugin = "idea")
     idea {
