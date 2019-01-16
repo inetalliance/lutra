@@ -23,8 +23,8 @@ public class LegendElement extends CommonAbstractElement<LegendElement> implemen
 	}
 
 	@Override
-	public LegendElement clone() throws CloneNotSupportedException {
-		return (LegendElement) cloneWithListeners();
+	public LegendElement copy() {
+		return (LegendElement) copyWithListeners();
 	}
 
 	public final String getAccessKey() {

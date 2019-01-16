@@ -22,9 +22,8 @@ public class OlElement extends CommonAbstractElement<OlElement> implements Block
 	}
 
 	@Override
-	public OlElement clone()
-		throws CloneNotSupportedException {
-		return (OlElement) cloneWithListeners();
+	public OlElement copy() {
+		return (OlElement) copyWithListeners();
 	}
 
 	public Iterable<LiElement> getItems() {

@@ -24,8 +24,8 @@ public class OptionElement extends CommonAbstractElement<OptionElement> implemen
 	}
 
 	@Override
-	public OptionElement clone() throws CloneNotSupportedException {
-		return (OptionElement) cloneWithListeners();
+	public OptionElement copy() {
+		return (OptionElement) copyWithListeners();
 	}
 
 	public final String getLabel() {

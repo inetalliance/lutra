@@ -14,7 +14,7 @@ public class KbdElement extends CommonAbstractElement<KbdElement> {
 	}
 
 	@Override
-	public KbdElement clone() throws CloneNotSupportedException {
-		return (KbdElement) cloneWithListeners();
+	public KbdElement copy() {
+		return (KbdElement) copyWithListeners();
 	}
 }

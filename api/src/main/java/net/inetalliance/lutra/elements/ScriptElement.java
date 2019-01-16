@@ -57,9 +57,8 @@ public class ScriptElement extends Element implements HeadElementChild, BlockEle
 	}
 
 	@Override
-	public ScriptElement clone()
-		throws CloneNotSupportedException {
-		return (ScriptElement) cloneWithListeners();
+	public ScriptElement copy() {
+		return (ScriptElement) copyWithListeners();
 	}
 
 	public final String getType() {

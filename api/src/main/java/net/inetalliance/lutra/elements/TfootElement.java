@@ -33,9 +33,8 @@ public class TfootElement extends CommonAbstractElement<TfootElement> implements
 	}
 
 	@Override
-	public TfootElement clone() throws CloneNotSupportedException
-	{
-		return (TfootElement) cloneWithListeners();
+	public TfootElement copy() {
+		return (TfootElement) copyWithListeners();
 	}
 
 	public final String getAlign()

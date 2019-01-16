@@ -9,8 +9,8 @@ import java.util.EnumSet;
 
 public class TheadElement extends CommonAbstractElement<TheadElement> implements TableElementChild {
 	@Override
-	public TheadElement clone() throws CloneNotSupportedException {
-		return (TheadElement) cloneWithListeners();
+	public TheadElement copy() {
+		return (TheadElement) copyWithListeners();
 	}
 
 	private static final ChildRule[] childRules =

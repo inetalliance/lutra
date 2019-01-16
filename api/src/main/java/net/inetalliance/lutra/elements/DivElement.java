@@ -22,7 +22,7 @@ public class DivElement extends CommonAbstractElement<DivElement> implements Blo
 	}
 
 	public static DivElement clear() throws CloneNotSupportedException {
-		return CLEAR.clone();
+		return CLEAR.copy();
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class DivElement extends CommonAbstractElement<DivElement> implements Blo
 	}
 
 	@Override
-	public DivElement clone() throws CloneNotSupportedException {
-		return (DivElement) cloneWithListeners();
+	public DivElement copy() {
+		return (DivElement) copyWithListeners();
 	}
 }

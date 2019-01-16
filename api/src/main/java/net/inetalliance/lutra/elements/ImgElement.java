@@ -28,9 +28,8 @@ public class ImgElement extends CommonAbstractElement<ImgElement> implements Inl
 	}
 
 	@Override
-	public ImgElement clone() throws CloneNotSupportedException
-	{
-		return (ImgElement) cloneWithListeners();
+	public ImgElement copy() {
+		return (ImgElement) copyWithListeners();
 	}
 
 	public final String getAlt()

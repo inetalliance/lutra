@@ -17,8 +17,7 @@ public class LiElement extends CommonAbstractElement<LiElement> implements UlEle
 	}
 
 	@Override
-	public LiElement clone() throws CloneNotSupportedException
-	{
-		return (LiElement) cloneWithListeners();
+	public LiElement copy() {
+		return (LiElement) copyWithListeners();
 	}
 }

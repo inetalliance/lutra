@@ -36,9 +36,8 @@ public class SelectElement extends CommonFormElement<SelectElement> implements I
 	}
 
 	@Override
-	public SelectElement clone()
-		throws CloneNotSupportedException {
-		return (SelectElement) cloneWithListeners();
+	public SelectElement copy() {
+		return (SelectElement) copyWithListeners();
 	}
 
 	public final <E extends Enum<E>> Map<E, OptionElement> addNonLocalizedOptions(final Class<E> type,

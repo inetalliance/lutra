@@ -18,8 +18,8 @@ public class BrElement extends Element implements InlineElement {
 	}
 
 	@Override
-	public BrElement clone() throws CloneNotSupportedException {
-		return (BrElement) cloneWithListeners();
+	public BrElement copy() {
+		return (BrElement) copyWithListeners();
 	}
 
 	public final String getCssClass() {

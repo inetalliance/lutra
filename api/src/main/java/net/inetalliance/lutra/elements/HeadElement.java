@@ -23,9 +23,8 @@ public class HeadElement extends Element implements HtmlElementChild
 	}
 
 	@Override
-	public HeadElement clone() throws CloneNotSupportedException
-	{
-		return (HeadElement) cloneWithListeners();
+	public HeadElement copy() {
+		return (HeadElement) copyWithListeners();
 	}
 
 	public void addRss(final String title, final String href)

@@ -23,8 +23,8 @@ public class MetaElement extends Element implements HeadElementChild {
 	}
 
 	@Override
-	public MetaElement clone() throws CloneNotSupportedException {
-		return (MetaElement) cloneWithListeners();
+	public MetaElement copy() {
+		return (MetaElement) copyWithListeners();
 	}
 
 	public final String getContent() {

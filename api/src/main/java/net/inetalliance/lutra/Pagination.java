@@ -159,11 +159,7 @@ public class Pagination {
 		}
 		for (final Element element : paginationElements) {
 			element.removeChildren();
-			try {
-				element.appendChild(ul.clone());
-			} catch (CloneNotSupportedException e) {
-				throw new RuntimeException(e);
-			}
+			element.appendChild(ul.copy());
 		}
 		return start;
 	}

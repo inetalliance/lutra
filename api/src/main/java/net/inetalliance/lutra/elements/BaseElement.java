@@ -16,8 +16,8 @@ public class BaseElement extends Element implements HeadElementChild {
 	}
 
 	@Override
-	public BaseElement clone() throws CloneNotSupportedException {
-		return (BaseElement) cloneWithListeners();
+	public BaseElement copy() {
+		return (BaseElement) copyWithListeners();
 	}
 
 	public final String getHref() {

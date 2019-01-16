@@ -25,9 +25,8 @@ public class FormElement extends CommonAbstractElement<FormElement> implements B
 	}
 
 	@Override
-	public FormElement clone() throws CloneNotSupportedException
-	{
-		return (FormElement) cloneWithListeners();
+	public FormElement copy() {
+		return (FormElement) copyWithListeners();
 	}
 
 	public final String getAccept()

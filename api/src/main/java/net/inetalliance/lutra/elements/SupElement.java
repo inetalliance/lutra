@@ -14,7 +14,7 @@ public class SupElement extends CommonAbstractElement<SupElement> implements Inl
 	}
 
 	@Override
-	public SupElement clone() throws CloneNotSupportedException {
-		return (SupElement) cloneWithListeners();
+	public SupElement copy() {
+		return (SupElement) copyWithListeners();
 	}
 }

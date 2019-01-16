@@ -14,7 +14,7 @@ public class AcronymElement extends CommonAbstractElement<AcronymElement> implem
 	}
 
 	@Override
-	public AcronymElement clone() throws CloneNotSupportedException {
-		return (AcronymElement) cloneWithListeners();
+	public AcronymElement copy() {
+		return (AcronymElement) copyWithListeners();
 	}
 }

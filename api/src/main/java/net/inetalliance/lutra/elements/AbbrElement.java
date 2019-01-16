@@ -14,7 +14,7 @@ public class AbbrElement extends CommonAbstractElement<AbbrElement> implements I
 	}
 
 	@Override
-	public AbbrElement clone() throws CloneNotSupportedException {
-		return (AbbrElement) cloneWithListeners();
+	public AbbrElement copy() {
+		return (AbbrElement) copyWithListeners();
 	}
 }

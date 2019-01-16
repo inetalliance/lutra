@@ -13,7 +13,7 @@ public class BdoElement extends CommonAbstractElement<BdoElement> implements Inl
 	}
 
 	@Override
-	public BdoElement clone() throws CloneNotSupportedException {
-		return (BdoElement) cloneWithListeners();
+	public BdoElement copy() {
+		return (BdoElement) copyWithListeners();
 	}
 }

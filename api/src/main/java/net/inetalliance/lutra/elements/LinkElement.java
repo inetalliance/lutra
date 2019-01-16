@@ -40,8 +40,8 @@ public class LinkElement extends CommonAbstractElement<LinkElement> implements H
 	}
 
 	@Override
-	public LinkElement clone() throws CloneNotSupportedException {
-		return (LinkElement) cloneWithListeners();
+	public LinkElement copy() {
+		return (LinkElement) copyWithListeners();
 	}
 
 	public final String getMedia() {

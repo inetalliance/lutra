@@ -26,8 +26,8 @@ public abstract class CommonAbstractElement<T extends CommonAbstractElement<T>> 
 	}
 
 	@Override
-	public abstract T clone()
-		throws CloneNotSupportedException;
+	public abstract T copy()
+		;
 
 	@Override
 	public T addClass(final String... cssClasses) {

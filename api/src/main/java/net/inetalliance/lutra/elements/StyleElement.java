@@ -41,8 +41,8 @@ public class StyleElement extends Element implements HeadElementChild {
 	}
 
 	@Override
-	public StyleElement clone() throws CloneNotSupportedException {
-		return (StyleElement) cloneWithListeners();
+	public StyleElement copy() {
+		return (StyleElement) copyWithListeners();
 	}
 
 	public final String getMedia() {

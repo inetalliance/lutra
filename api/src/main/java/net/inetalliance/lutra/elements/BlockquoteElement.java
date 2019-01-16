@@ -18,8 +18,8 @@ public class BlockquoteElement extends CommonAbstractElement<BlockquoteElement> 
 	}
 
 	@Override
-	public BlockquoteElement clone() throws CloneNotSupportedException {
-		return (BlockquoteElement) cloneWithListeners();
+	public BlockquoteElement copy() {
+		return (BlockquoteElement) copyWithListeners();
 	}
 
 	public final String getCite() {

@@ -14,7 +14,7 @@ public class BigElement extends CommonAbstractElement<BigElement> implements Inl
 	}
 
 	@Override
-	public BigElement clone() throws CloneNotSupportedException {
-		return (BigElement) cloneWithListeners();
+	public BigElement copy() {
+		return (BigElement) copyWithListeners();
 	}
 }

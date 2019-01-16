@@ -14,7 +14,7 @@ public class EmElement extends CommonAbstractElement<EmElement> implements Inlin
 	}
 
 	@Override
-	public EmElement clone() throws CloneNotSupportedException {
-		return (EmElement) cloneWithListeners();
+	public EmElement copy() {
+		return (EmElement) copyWithListeners();
 	}
 }

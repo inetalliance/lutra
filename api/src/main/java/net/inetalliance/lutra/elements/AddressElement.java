@@ -15,7 +15,7 @@ public class AddressElement extends CommonAbstractElement<AddressElement> implem
 	}
 
 	@Override
-	public AddressElement clone() throws CloneNotSupportedException {
-		return (AddressElement) cloneWithListeners();
+	public AddressElement copy() {
+		return (AddressElement) copyWithListeners();
 	}
 }

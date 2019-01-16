@@ -14,7 +14,7 @@ public class H5Element extends CommonAbstractElement<H5Element> implements Block
 	}
 
 	@Override
-	public H5Element clone() throws CloneNotSupportedException {
-		return (H5Element) cloneWithListeners();
+	public H5Element copy() {
+		return (H5Element) copyWithListeners();
 	}
 }

@@ -32,8 +32,8 @@ public class ButtonElement extends CommonAbstractElement<ButtonElement> implemen
 	}
 
 	@Override
-	public ButtonElement clone() throws CloneNotSupportedException {
-		return (ButtonElement) cloneWithListeners();
+	public ButtonElement copy() {
+		return (ButtonElement) copyWithListeners();
 	}
 
 	public final String getAccessKey() {

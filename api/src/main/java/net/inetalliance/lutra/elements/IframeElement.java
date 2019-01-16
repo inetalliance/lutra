@@ -31,8 +31,8 @@ public class IframeElement extends CommonAbstractElement<IframeElement> implemen
 	}
 
 	@Override
-	public IframeElement clone() throws CloneNotSupportedException {
-		return (IframeElement) cloneWithListeners();
+	public IframeElement copy() {
+		return (IframeElement) copyWithListeners();
 	}
 
 	public final String getData() {

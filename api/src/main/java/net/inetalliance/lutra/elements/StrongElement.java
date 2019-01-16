@@ -14,7 +14,7 @@ public class StrongElement extends CommonAbstractElement<StrongElement> implemen
 	}
 
 	@Override
-	public StrongElement clone() throws CloneNotSupportedException {
-		return (StrongElement) cloneWithListeners();
+	public StrongElement copy() {
+		return (StrongElement) copyWithListeners();
 	}
 }

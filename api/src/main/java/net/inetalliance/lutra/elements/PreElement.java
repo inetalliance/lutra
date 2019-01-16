@@ -25,8 +25,7 @@ public class PreElement extends CommonAbstractElement<PreElement> implements Blo
 	}
 
 	@Override
-	public PreElement clone() throws CloneNotSupportedException
-	{
-		return (PreElement) cloneWithListeners();
+	public PreElement copy() {
+		return (PreElement) copyWithListeners();
 	}
 }

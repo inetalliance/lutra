@@ -28,8 +28,8 @@ public class AElement extends CommonAbstractElement<AElement> implements InlineE
 	}
 
 	@Override
-	public AElement clone() throws CloneNotSupportedException {
-		return (AElement) cloneWithListeners();
+	public AElement copy() {
+		return (AElement) copyWithListeners();
 	}
 
 	public final void disable() {

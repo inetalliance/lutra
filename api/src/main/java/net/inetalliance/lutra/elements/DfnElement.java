@@ -14,7 +14,7 @@ public class DfnElement extends CommonAbstractElement<DfnElement> implements Inl
 	}
 
 	@Override
-	public DfnElement clone() throws CloneNotSupportedException {
-		return (DfnElement) cloneWithListeners();
+	public DfnElement copy() {
+		return (DfnElement) copyWithListeners();
 	}
 }

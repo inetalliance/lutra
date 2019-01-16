@@ -13,7 +13,7 @@ public class BElement extends CommonAbstractElement<BElement> implements InlineE
 	}
 
 	@Override
-	public BElement clone() throws CloneNotSupportedException {
-		return (BElement) cloneWithListeners();
+	public BElement copy() {
+		return (BElement) copyWithListeners();
 	}
 }

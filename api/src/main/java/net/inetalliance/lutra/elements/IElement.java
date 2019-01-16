@@ -13,7 +13,7 @@ public class IElement extends CommonAbstractElement<IElement> implements InlineE
 	}
 
 	@Override
-	public IElement clone() throws CloneNotSupportedException {
-		return (IElement) cloneWithListeners();
+	public IElement copy() {
+		return (IElement) copyWithListeners();
 	}
 }

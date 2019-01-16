@@ -129,10 +129,7 @@ public abstract class Element implements Cloneable {
 		return parent;
 	}
 
-	@Override
-	public abstract Element clone()
-		throws CloneNotSupportedException;
-
+	public abstract Element copy() ;
 
 	public final Element addChild(final PreAddChildListener listener, final Iterable<? extends Element> children) {
 		for (final Element child : children)
@@ -283,21 +280,21 @@ public abstract class Element implements Cloneable {
 		}
 	}
 
-	public Element clone(final Consumer<Element> functor, final Predicate<? super Element> predicate,
-	                     final Element... elementsToRemove) {
-		final Element clone;
+	public Element copy(final Consumer<Element> functor, final Predicate<? super Element> predicate,
+	                    final Element... elementsToRemove) {
+		final Element copy;
 		if (elementsToRemove.length == 0) {
 			// if none specified, check all descendants
-			clone = cloneWithListeners(List.of());
-			Funky.stream(clone.getTree()).filter(predicate).forEach(functor);
+			copy = copyWithListeners(List.of());
+			Funky.stream(copy.getTree()).filter(predicate).forEach(functor);
 		} else {
 			final Collection<InstanceListener> listeners = new ArrayList<>(elementsToRemove.length);
 			of(elementsToRemove).filter(predicate).map(InstanceListener::new).forEach(listeners::add);
-			clone = cloneWithListeners(listeners);
+			copy = copyWithListeners(listeners);
 			listeners.stream().map(InstanceListener::getClone).forEach(functor);
-			return clone;
+			return copy;
 		}
-		return clone;
+		return copy;
 	}
 
 	/**
@@ -310,11 +307,11 @@ public abstract class Element implements Cloneable {
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public Element cloneWithListeners(final Iterable<? extends CloneListener> listeners) {
+	public Element copyWithListeners(final Iterable<? extends CloneListener> listeners) {
 		final Element clone = elementType.create();
 		clone.attributes.putAll(attributes);
 		for (final Element child : children)
-			clone.addChild(child.cloneWithListeners(listeners));
+			clone.addChild(child.copyWithListeners(listeners));
 		clone.location = location;
 		if (listeners != null) {
 			for (final CloneListener listener : listeners)
@@ -343,8 +340,8 @@ public abstract class Element implements Cloneable {
 		return clone;
 	}
 
-	public Element cloneWithListeners() {
-		return cloneWithListeners(null);
+	public Element copyWithListeners() {
+		return copyWithListeners(null);
 	}
 
 	public void disableEditInPlace() {

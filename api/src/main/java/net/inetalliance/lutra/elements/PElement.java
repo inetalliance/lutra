@@ -14,7 +14,7 @@ public class PElement extends CommonAbstractElement<PElement> implements BlockEl
 	}
 
 	@Override
-	public PElement clone() throws CloneNotSupportedException {
-		return (PElement) cloneWithListeners();
+	public PElement copy() {
+		return (PElement) copyWithListeners();
 	}
 }

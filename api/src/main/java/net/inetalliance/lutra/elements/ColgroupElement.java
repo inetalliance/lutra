@@ -25,8 +25,8 @@ public class ColgroupElement extends CommonAbstractElement<ColgroupElement> impl
 	}
 
 	@Override
-	public ColgroupElement clone() throws CloneNotSupportedException {
-		return (ColgroupElement) cloneWithListeners();
+	public ColgroupElement copy() {
+		return (ColgroupElement) copyWithListeners();
 	}
 
 	public final String getAlign() {

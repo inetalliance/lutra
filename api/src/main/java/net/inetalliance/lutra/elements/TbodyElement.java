@@ -33,9 +33,8 @@ public class TbodyElement extends CommonAbstractElement<TbodyElement> implements
 	}
 
 	@Override
-	public TbodyElement clone() throws CloneNotSupportedException
-	{
-		return (TbodyElement) cloneWithListeners();
+	public TbodyElement copy() {
+		return (TbodyElement) copyWithListeners();
 	}
 
 	public final String getAlign()

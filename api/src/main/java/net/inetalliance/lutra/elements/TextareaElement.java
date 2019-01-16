@@ -29,9 +29,8 @@ public class TextareaElement
 
 	@SuppressWarnings({"CloneDoesntCallSuperClone"})
 	@Override
-	public TextareaElement clone()
-		throws CloneNotSupportedException {
-		return (TextareaElement) cloneWithListeners();
+	public TextareaElement copy() {
+		return (TextareaElement) copyWithListeners();
 	}
 
 	public final String getAccessKey() {

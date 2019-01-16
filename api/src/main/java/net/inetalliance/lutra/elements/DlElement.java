@@ -23,9 +23,8 @@ public class DlElement extends CommonAbstractElement<DlElement> implements Block
 	}
 
 	@Override
-	public DlElement clone()
-		throws CloneNotSupportedException {
-		return (DlElement) cloneWithListeners();
+	public DlElement copy() {
+		return (DlElement) copyWithListeners();
 	}
 
 	public static Iterator<DlElement> filter(final Iterator<Element> elements) {

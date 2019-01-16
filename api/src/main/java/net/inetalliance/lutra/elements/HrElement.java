@@ -12,8 +12,7 @@ public class HrElement extends CommonAbstractElement<HrElement>
 	}
 
 	@Override
-	public HrElement clone() throws CloneNotSupportedException
-	{
-		return (HrElement) cloneWithListeners();
+	public HrElement copy() {
+		return (HrElement) copyWithListeners();
 	}
 }

@@ -25,9 +25,8 @@ public class InputElement
 	}
 
 	@Override
-	public InputElement clone()
-		throws CloneNotSupportedException {
-		return (InputElement) cloneWithListeners();
+	public InputElement copy() {
+		return (InputElement) copyWithListeners();
 	}
 
 	public boolean isRadio() {

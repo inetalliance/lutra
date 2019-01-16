@@ -32,8 +32,7 @@ public class NoscriptElement extends CommonAbstractElement<NoscriptElement> impl
 	}
 
 	@Override
-	public NoscriptElement clone() throws CloneNotSupportedException
-	{
-		return (NoscriptElement) cloneWithListeners();
+	public NoscriptElement copy() {
+		return (NoscriptElement) copyWithListeners();
 	}
 }

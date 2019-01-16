@@ -73,13 +73,12 @@ public class TextContent extends Element
 
 	@SuppressWarnings({"CloneDoesntCallSuperClone"})
 	@Override
-	public TextContent clone()
-		throws CloneNotSupportedException {
+	public TextContent copy() {
 		return new TextContent(content);
 	}
 
 	@Override
-	public Element cloneWithListeners(final Iterable<? extends CloneListener> listeners) {
+	public Element copyWithListeners(final Iterable<? extends CloneListener> listeners) {
 		return new TextContent(content);
 	}
 

@@ -32,7 +32,7 @@ public class LazyDocument implements Cloneable, Document {
 		final TypeListener headListener = new TypeListener(ElementType.HEAD);
 		final TypeListener titleListener = new TypeListener(ElementType.TITLE);
 		final TypeListener bodyListener = new TypeListener(ElementType.BODY);
-		this.root = builder.getRoot().cloneWithListeners(
+		this.root = builder.getRoot().copyWithListeners(
 			ArrayIterable.$(new IdMapper(byId), headListener, titleListener, bodyListener));
 		this.title = (TitleElement) titleListener.getElement();
 		this.head = (HeadElement) headListener.getElement();

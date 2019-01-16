@@ -23,8 +23,8 @@ public class InsElement extends CommonAbstractElement<InsElement> implements Inl
 	}
 
 	@Override
-	public InsElement clone() throws CloneNotSupportedException {
-		return (InsElement) cloneWithListeners();
+	public InsElement copy() {
+		return (InsElement) copyWithListeners();
 	}
 
 	public final String getCite() {

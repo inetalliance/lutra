@@ -18,8 +18,8 @@ public class QElement extends CommonAbstractElement<QElement> implements InlineE
 	}
 
 	@Override
-	public QElement clone() throws CloneNotSupportedException {
-		return (QElement) cloneWithListeners();
+	public QElement copy() {
+		return (QElement) copyWithListeners();
 	}
 
 	public final String getCite() {

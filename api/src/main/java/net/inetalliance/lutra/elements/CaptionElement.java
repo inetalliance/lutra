@@ -5,8 +5,8 @@ import static net.inetalliance.lutra.rules.ChildRule.ANY_INLINE_OR_TEXT_ELEMENTS
 
 public class CaptionElement extends CommonAbstractElement<CaptionElement> implements TableElementChild {
 	@Override
-	public CaptionElement clone() throws CloneNotSupportedException {
-		return (CaptionElement) cloneWithListeners();
+	public CaptionElement copy() {
+		return (CaptionElement) copyWithListeners();
 	}
 
 	public CaptionElement(final String text) {

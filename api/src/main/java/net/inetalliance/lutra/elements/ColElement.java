@@ -20,8 +20,8 @@ public class ColElement extends CommonAbstractElement<ColElement> implements Col
 	}
 
 	@Override
-	public ColElement clone() throws CloneNotSupportedException {
-		return (ColElement) cloneWithListeners();
+	public ColElement copy() {
+		return (ColElement) copyWithListeners();
 	}
 
 	public final String getAlign() {

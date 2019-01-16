@@ -14,7 +14,7 @@ public class H1Element extends CommonAbstractElement<H1Element> implements Block
 	}
 
 	@Override
-	public H1Element clone() throws CloneNotSupportedException {
-		return (H1Element) cloneWithListeners();
+	public H1Element copy() {
+		return (H1Element) copyWithListeners();
 	}
 }

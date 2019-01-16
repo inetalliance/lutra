@@ -27,8 +27,8 @@ public class AreaElement extends Element implements MapElementChild {
 	}
 
 	@Override
-	public AreaElement clone() throws CloneNotSupportedException {
-		return (AreaElement) cloneWithListeners();
+	public AreaElement copy() {
+		return (AreaElement) copyWithListeners();
 	}
 
 	public final String getAccessKey() {

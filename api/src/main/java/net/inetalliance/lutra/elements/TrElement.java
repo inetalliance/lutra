@@ -26,8 +26,8 @@ public class TrElement extends CommonAbstractElement<TrElement>
 	}
 
 	@Override
-	public TrElement clone() throws CloneNotSupportedException {
-		return (TrElement) cloneWithListeners();
+	public TrElement copy() {
+		return (TrElement) copyWithListeners();
 	}
 
 	public final String getAlign() {

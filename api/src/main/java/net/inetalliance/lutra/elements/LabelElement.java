@@ -25,8 +25,8 @@ public class LabelElement extends CommonAbstractElement<LabelElement> implements
 	}
 
 	@Override
-	public LabelElement clone() throws CloneNotSupportedException {
-		return (LabelElement) cloneWithListeners();
+	public LabelElement copy() {
+		return (LabelElement) copyWithListeners();
 	}
 
 	public final String getFor() {

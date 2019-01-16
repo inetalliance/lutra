@@ -14,7 +14,7 @@ public class TtElement extends CommonAbstractElement<TtElement> implements Inlin
 	}
 
 	@Override
-	public TtElement clone() throws CloneNotSupportedException {
-		return (TtElement) cloneWithListeners();
+	public TtElement copy() {
+		return (TtElement) copyWithListeners();
 	}
 }

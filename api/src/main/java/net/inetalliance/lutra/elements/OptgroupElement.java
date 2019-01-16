@@ -26,9 +26,8 @@ public class OptgroupElement extends CommonAbstractElement<OptgroupElement> impl
 	}
 
 	@Override
-	public OptgroupElement clone() throws CloneNotSupportedException
-	{
-		return (OptgroupElement) cloneWithListeners();
+	public OptgroupElement copy() {
+		return (OptgroupElement) copyWithListeners();
 	}
 
 	public final String getLabel()

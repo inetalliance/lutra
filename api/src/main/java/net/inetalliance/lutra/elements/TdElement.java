@@ -28,9 +28,8 @@ public class TdElement extends CommonAbstractElement<TdElement> implements TrEle
 	}
 
 	@Override
-	public TdElement clone() throws CloneNotSupportedException
-	{
-		return (TdElement) cloneWithListeners();
+	public TdElement copy() {
+		return (TdElement) copyWithListeners();
 	}
 
 	@Override

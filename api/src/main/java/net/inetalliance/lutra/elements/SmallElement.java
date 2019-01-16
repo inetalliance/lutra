@@ -14,7 +14,7 @@ public class SmallElement extends CommonAbstractElement<SmallElement> implements
 	}
 
 	@Override
-	public SmallElement clone() throws CloneNotSupportedException {
-		return (SmallElement) cloneWithListeners();
+	public SmallElement copy() {
+		return (SmallElement) copyWithListeners();
 	}
 }

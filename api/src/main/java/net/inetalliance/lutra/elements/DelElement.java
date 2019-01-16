@@ -22,8 +22,8 @@ public class DelElement extends CommonAbstractElement<DelElement> implements Inl
 	}
 
 	@Override
-	public DelElement clone() throws CloneNotSupportedException {
-		return (DelElement) cloneWithListeners();
+	public DelElement copy() {
+		return (DelElement) copyWithListeners();
 	}
 
 	public final String getCite() {

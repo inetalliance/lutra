@@ -14,7 +14,7 @@ public class DdElement extends CommonAbstractElement<DdElement> implements DlEle
 	}
 
 	@Override
-	public DdElement clone() throws CloneNotSupportedException {
-		return (DdElement) cloneWithListeners();
+	public DdElement copy() {
+		return (DdElement) copyWithListeners();
 	}
 }

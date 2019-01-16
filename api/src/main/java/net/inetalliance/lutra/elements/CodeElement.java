@@ -14,8 +14,8 @@ public class CodeElement extends CommonAbstractElement<CodeElement> implements I
 	}
 
 	@Override
-	public CodeElement clone() throws CloneNotSupportedException {
-		return (CodeElement) cloneWithListeners();
+	public CodeElement copy() {
+		return (CodeElement) copyWithListeners();
 	}
 
 }

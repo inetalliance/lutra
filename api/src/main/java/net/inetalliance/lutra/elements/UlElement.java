@@ -22,9 +22,8 @@ public class UlElement extends CommonAbstractElement<UlElement> implements Block
 	}
 
 	@Override
-	public UlElement clone()
-		throws CloneNotSupportedException {
-		return (UlElement) cloneWithListeners();
+	public UlElement copy() {
+		return (UlElement) copyWithListeners();
 	}
 
 	public Iterable<LiElement> getItems() {

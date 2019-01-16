@@ -14,7 +14,7 @@ public class VarElement extends CommonAbstractElement<VarElement> implements Inl
 	}
 
 	@Override
-	public VarElement clone() throws CloneNotSupportedException {
-		return (VarElement) cloneWithListeners();
+	public VarElement copy() {
+		return (VarElement) copyWithListeners();
 	}
 }

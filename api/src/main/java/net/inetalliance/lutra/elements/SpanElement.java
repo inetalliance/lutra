@@ -19,7 +19,7 @@ public class SpanElement extends CommonAbstractElement<SpanElement> implements I
 	}
 
 	@Override
-	public SpanElement clone() throws CloneNotSupportedException {
-		return (SpanElement) cloneWithListeners();
+	public SpanElement copy() {
+		return (SpanElement) copyWithListeners();
 	}
 }

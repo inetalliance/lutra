@@ -34,8 +34,8 @@ public class EmbedElement extends CommonAbstractElement<EmbedElement> implements
 	}
 
 	@Override
-	public EmbedElement clone() throws CloneNotSupportedException {
-		return (EmbedElement) cloneWithListeners();
+	public EmbedElement copy() {
+		return (EmbedElement) copyWithListeners();
 	}
 
 	public final String getSrc() {

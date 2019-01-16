@@ -28,9 +28,8 @@ public class ThElement extends CommonAbstractElement<ThElement> implements TrEle
 	}
 
 	@Override
-	public ThElement clone() throws CloneNotSupportedException
-	{
-		return (ThElement) cloneWithListeners();
+	public ThElement copy() {
+		return (ThElement) copyWithListeners();
 	}
 
 	public final String getAbbr()

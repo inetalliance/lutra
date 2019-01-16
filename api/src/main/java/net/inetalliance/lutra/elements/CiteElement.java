@@ -15,7 +15,7 @@ public class CiteElement extends CommonAbstractElement<CiteElement> implements I
 	}
 
 	@Override
-	public CiteElement clone() throws CloneNotSupportedException {
-		return (CiteElement) cloneWithListeners();
+	public CiteElement copy() {
+		return (CiteElement) copyWithListeners();
 	}
 }

@@ -32,8 +32,8 @@ public class AudioElement extends CommonAbstractElement<AudioElement> implements
 	}
 
 	@Override
-	public AudioElement clone() throws CloneNotSupportedException {
-		return (AudioElement) cloneWithListeners();
+	public AudioElement copy() {
+		return (AudioElement) copyWithListeners();
 	}
 
 	public final String getSrc() {

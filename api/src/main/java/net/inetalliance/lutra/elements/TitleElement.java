@@ -17,9 +17,8 @@ public class TitleElement extends Element implements HeadElementChild
 	}
 
 	@Override
-	public TitleElement clone() throws CloneNotSupportedException
-	{
-		return (TitleElement) cloneWithListeners();
+	public TitleElement copy() {
+		return (TitleElement) copyWithListeners();
 	}
 
 	@Override

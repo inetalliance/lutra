@@ -35,8 +35,8 @@ public class HtmlElement extends Element implements Document {
 	}
 
 	@Override
-	public HtmlElement clone() throws CloneNotSupportedException {
-		return (HtmlElement) cloneWithListeners();
+	public HtmlElement copy() {
+		return (HtmlElement) copyWithListeners();
 	}
 
 	@Override

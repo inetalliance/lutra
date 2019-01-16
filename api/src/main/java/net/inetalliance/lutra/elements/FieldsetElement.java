@@ -26,8 +26,7 @@ public class FieldsetElement extends CommonAbstractElement<FieldsetElement> impl
 	}
 
 	@Override
-	public FieldsetElement clone() throws CloneNotSupportedException
-	{
-		return (FieldsetElement) cloneWithListeners();
+	public FieldsetElement copy() {
+		return (FieldsetElement) copyWithListeners();
 	}
 }

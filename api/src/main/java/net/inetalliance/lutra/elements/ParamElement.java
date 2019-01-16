@@ -19,8 +19,8 @@ public class ParamElement extends Element implements ObjectElementChild, IframeE
 	}
 
 	@Override
-	public ParamElement clone() throws CloneNotSupportedException {
-		return (ParamElement) cloneWithListeners();
+	public ParamElement copy() {
+		return (ParamElement) copyWithListeners();
 	}
 
 	public final String getName() {

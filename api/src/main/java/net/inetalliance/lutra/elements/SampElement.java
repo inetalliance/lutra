@@ -17,8 +17,7 @@ public class SampElement extends CommonAbstractElement<SampElement> implements I
 	}
 
 	@Override
-	public SampElement clone() throws CloneNotSupportedException
-	{
-		return (SampElement) cloneWithListeners();
+	public SampElement copy() {
+		return (SampElement) copyWithListeners();
 	}
 }

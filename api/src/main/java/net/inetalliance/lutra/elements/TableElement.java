@@ -84,8 +84,7 @@ public class TableElement extends CommonAbstractElement<TableElement> implements
 	}
 
 	@Override
-	public TableElement clone() throws CloneNotSupportedException
-	{
-		return (TableElement) cloneWithListeners();
+	public TableElement copy() {
+		return (TableElement) copyWithListeners();
 	}
 }

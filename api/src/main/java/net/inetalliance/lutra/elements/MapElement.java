@@ -32,8 +32,7 @@ public class MapElement extends CommonAbstractElement<MapElement> implements Inl
 	}
 
 	@Override
-	public MapElement clone() throws CloneNotSupportedException
-	{
-		return (MapElement) cloneWithListeners();
+	public MapElement copy() {
+		return (MapElement) copyWithListeners();
 	}
 }

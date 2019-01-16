@@ -18,8 +18,8 @@ public class BodyElement extends CommonAbstractElement<BodyElement> implements H
 	}
 
 	@Override
-	public BodyElement clone() throws CloneNotSupportedException {
-		return (BodyElement) cloneWithListeners();
+	public BodyElement copy() {
+		return (BodyElement) copyWithListeners();
 	}
 
 	public final String getOnload() {

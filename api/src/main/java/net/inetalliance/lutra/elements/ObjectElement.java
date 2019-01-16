@@ -38,8 +38,8 @@ public class ObjectElement extends CommonAbstractElement<ObjectElement> implemen
 	}
 
 	@Override
-	public ObjectElement clone() throws CloneNotSupportedException {
-		return (ObjectElement) cloneWithListeners();
+	public ObjectElement copy() {
+		return (ObjectElement) copyWithListeners();
 	}
 
 	public final String getArchive() {
