@@ -467,7 +467,7 @@ public abstract class Element implements Cloneable {
 	 * @return an iterable including this element's descendants.
 	 */
 	public Iterable<Element> getDescendants() {
-		return ()-> new FunctorBreadthFirstIterator<>(children, Element::getChildren);
+		return () -> new FunctorBreadthFirstIterator<>(children, Element::getChildren);
 	}
 
 	public Integer getHeightStyle() {
@@ -545,6 +545,10 @@ public abstract class Element implements Cloneable {
 
 	public Integer getWidthStyle() {
 		return getCssPixels(getStyle("width"));
+	}
+
+	public final boolean isEmpty() {
+		return children.isEmpty();
 	}
 
 	public final boolean hasChildren() {
@@ -801,7 +805,7 @@ public abstract class Element implements Cloneable {
 			output.append(" itemscope");
 		}
 		attributes.entrySet().stream().filter(filter).forEach(
-			throwing( entry -> outputAttribute(output, entry.getKey(), entry.getValue())));
+			throwing(entry -> outputAttribute(output, entry.getKey(), entry.getValue())));
 		if (data != null) {
 			for (Map.Entry<String, Object> entry : data.entrySet()) {
 				if (entry.getKey().startsWith("data-"))
