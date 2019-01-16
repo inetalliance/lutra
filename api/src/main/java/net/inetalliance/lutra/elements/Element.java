@@ -31,7 +31,7 @@ import static java.util.stream.Stream.of;
 import static net.inetalliance.funky.Funky.throwing;
 import static net.inetalliance.lutra.elements.Attribute.*;
 
-public abstract class Element implements Cloneable {
+public abstract class Element {
 	public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
 	public static final Pattern SAX_ENTITY_ERROR = Pattern.compile(".*\".+\" was referenced, but not declared.*");
 	protected static final String[] NO_CLASSES = new String[0];
