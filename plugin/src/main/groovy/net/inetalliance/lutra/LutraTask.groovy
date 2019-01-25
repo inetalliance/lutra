@@ -5,12 +5,12 @@ import net.inetalliance.lutra.elements.Element
 import net.inetalliance.lutra.elements.HtmlElement
 import net.inetalliance.lutra.elements.TextContent
 import net.inetalliance.lutra.rules.ValidationErrors
-import net.inetalliance.lutra.util.BreadthFirstIterator
 import net.inetalliance.lutra.util.Escaper
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import org.xml.sax.SAXException
 
+import java.nio.file.Files
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.function.Predicate
@@ -66,18 +66,11 @@ class LutraTask extends DefaultTask {
       exclude = { File f -> !p.matcher(f.getAbsolutePath()).matches() }
     }
 
-
-    new BreadthFirstIterator<File>(root) {
-      @Override
-      protected Iterator<File> getChildren(final File object) {
-        return Arrays.stream(object.listFiles(new FileFilter() {
-          @Override
-          boolean accept(final File f) {
-            return f.getName().endsWith(".html") && !exclude.test(f)
-          }
-        })).iterator()
-      }
-    }.each({ genInput ->
+    Files.walk((root.toPath()))
+        .map({ p -> p.toFile() })
+        .filter(exclude)
+        .filter({ f -> f.getName().endsWith(".html") })
+        .each({ genInput ->
       try {
         final String filePath = genInput.getAbsolutePath().replace(root.getAbsolutePath(), "")
         final int lastSlash = filePath.lastIndexOf('/')
