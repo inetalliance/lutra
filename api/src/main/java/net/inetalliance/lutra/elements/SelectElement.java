@@ -49,12 +49,12 @@ public class SelectElement
 		return addOptions(from, to, null);
 	}
 
-	public final <E extends Enum<E>> void addOptions(final Class<E> type, final Function<E, String> namePlucker) {
+	public final <E extends Enum<E>> void addOptions(final Class<E> type, final Function<? super E, String> namePlucker) {
 		addOptions(type, (Collection<E>) null, namePlucker);
 	}
 
 	public final <E extends Enum<E>> void addOptions(final Class<E> type, final Collection<E> values,
-		final Function<E, String> namePlucker) {
+		final Function<? super E, String> namePlucker) {
 		addOptions(type, values, null, namePlucker);
 	}
 
@@ -72,18 +72,18 @@ public class SelectElement
 
 	public final <E extends Enum<E>, G extends Enum<G>>
 	Map<G, OptgroupElement> addOptions(final Class<E> type, final Class<G> groups,
-		Function<G, String> groupNamePlucker, Function<E, String> namePlucker, BiPredicate<G, E> inGroup) {
+		Function<? super G, String> groupNamePlucker, Function<? super E, String> namePlucker, BiPredicate<? super G, E> inGroup) {
 		return addOptions(type, groups, null, groupNamePlucker, namePlucker, inGroup);
 	}
 
 	public final <E extends Enum<E>>
-	Map<E, OptionElement> addOptions(final Class<E> type, final E selected, final Function<E, String> namePlucker) {
+	Map<E, OptionElement> addOptions(final Class<E> type, final E selected, final Function<? super E, String> namePlucker) {
 		return addOptions(type, EnumSet.allOf(type), selected, namePlucker);
 	}
 
 	public final <T>
 	List<OptionElement> addOptions(final T selected, final Collection<T> items,
-		final Function<T, String> namePlucker, final Function<T, ?> valuePlucker) {
+		final Function<T, String> namePlucker, final Function<? super T, ?> valuePlucker) {
 		final List<OptionElement> options = new ArrayList<OptionElement>(items.size());
 		for (final T item : items) {
 			options.add(addOption(valuePlucker.apply(item), namePlucker.apply(item), item.equals(selected)));
@@ -93,9 +93,9 @@ public class SelectElement
 
 	public final <G, T>
 	Map<T, OptionElement> addOptions(final T selected, final Map<G, List<T>> map,
-		final Function<G, String> groupNamePlucker,
-		final Function<T, String> namePlucker,
-		final Function<T, String> valuePlucker) {
+		final Function<? super G, String> groupNamePlucker,
+		final Function<? super T, String> namePlucker,
+		final Function<? super T, String> valuePlucker) {
 		final Map<T, OptionElement> optionElements = new HashMap<T, OptionElement>(8);
 		for (final Map.Entry<G, List<T>> entry : map.entrySet()) {
 			final G group = entry.getKey();
@@ -117,7 +117,7 @@ public class SelectElement
 
 	public final <E extends Enum<E>> Map<E, OptionElement> addOptions(final Class<E> type,
 		final Collection<E> values,
-		final E selected, Function<E, String> namePlucker) {
+		final E selected, Function<? super E, String> namePlucker) {
 		final Map<E, OptionElement> map = new EnumMap<E, OptionElement>(type);
 		for (final E value : values) {
 			map.put(value, addOption(value.name(), namePlucker.apply(value), value == selected));
@@ -147,8 +147,8 @@ public class SelectElement
 
 	public final <E extends Enum<E>, G extends Enum<G>>
 	Map<G, OptgroupElement> addOptions(final Class<E> type, final Class<G> groups, final E selected,
-		final Function<G, String> groupNamePlucker, final Function<E, String> namePlucker,
-		BiPredicate<G, E> inGroup) {
+		final Function<? super G, String> groupNamePlucker, final Function<? super E, String> namePlucker,
+		BiPredicate<? super G, ? super E> inGroup) {
 		final EnumSet<E> values = EnumSet.allOf(type);
 		final Map<G, OptgroupElement> map = new EnumMap<>(groups);
 		for (final G group : EnumSet.allOf(groups)) {
