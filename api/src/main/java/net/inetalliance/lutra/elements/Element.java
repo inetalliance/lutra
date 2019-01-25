@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.Arrays.*;
@@ -469,7 +468,22 @@ public abstract class Element {
 	}
 
 	public Iterable<Element> getAncestors() {
-		return () -> Stream.iterate(parent, Element::getParent).iterator();
+		return () ->
+			new Iterator<>() {
+				Element nextChild = Element.this;
+
+				@Override
+				public boolean hasNext() {
+					return nextChild.parent != null;
+				}
+
+				@Override
+				public Element next() {
+					nextChild = nextChild.parent;
+					return nextChild;
+				}
+			};
+
 	}
 
 	public Element getFirstChild() {
@@ -988,6 +1002,7 @@ public abstract class Element {
 				if (!className.startsWith("net.mage.lutra") && !className.startsWith("org.apache.xerces")) {
 					return new DocumentLocation(className, traceElement.getLineNumber());
 				}
+
 			}
 			return null;
 		}
@@ -1005,6 +1020,5 @@ public abstract class Element {
 			return builder.toString();
 		}
 	}
-
 
 }
