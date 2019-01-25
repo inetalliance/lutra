@@ -1,23 +1,24 @@
 package net.inetalliance.lutra;
 
-import net.inetalliance.funky.iterators.ArrayIterable;
 import net.inetalliance.lutra.elements.*;
 import net.inetalliance.lutra.listeners.IdMapper;
 import net.inetalliance.lutra.listeners.TypeListener;
 import net.inetalliance.lutra.rules.ValidationErrors;
-import net.inetalliance.types.www.MetaTagName;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
-import static net.inetalliance.funky.Funky.stream;
-import static net.inetalliance.funky.StringFun.stripTags;
-import static net.inetalliance.lutra.elements.Attribute.ID;
+import static java.util.regex.Pattern.*;
+import static net.inetalliance.lutra.elements.Attribute.*;
 
-public class LazyDocument implements Cloneable, Document {
+public class LazyDocument
+	implements Cloneable,
+	           Document {
 
 	public final Element root;
 	public final Map<String, Element> byId;
@@ -32,8 +33,8 @@ public class LazyDocument implements Cloneable, Document {
 		final TypeListener headListener = new TypeListener(ElementType.HEAD);
 		final TypeListener titleListener = new TypeListener(ElementType.TITLE);
 		final TypeListener bodyListener = new TypeListener(ElementType.BODY);
-		this.root = builder.getRoot().copyWithListeners(
-			ArrayIterable.$(new IdMapper(byId), headListener, titleListener, bodyListener));
+		this.root = builder.getRoot()
+			.copyWithListeners(List.of(new IdMapper(byId), headListener, titleListener, bodyListener));
 		this.title = (TitleElement) titleListener.getElement();
 		this.head = (HeadElement) headListener.getElement();
 		this.body = (BodyElement) bodyListener.getElement();
@@ -67,12 +68,15 @@ public class LazyDocument implements Cloneable, Document {
 	}
 
 	public void setTitle(final String title) {
-		if (this.title != null)
+		if (this.title != null) {
 			this.title.setText(title);
+		}
 	}
 
 	public void reindex() {
-		stream(body.getDescendants()).filter(ID.has).forEach(element -> byId.put(element.getId(), element));
+		StreamSupport.stream(body.getDescendants().spliterator(), false)
+			.filter(ID.has)
+			.forEach(element -> byId.put(element.getId(), element));
 	}
 
 	@Override
@@ -112,17 +116,27 @@ public class LazyDocument implements Cloneable, Document {
 		return super.clone();
 	}
 
-	public void addMetaTag(final MetaTagName name, final String content, final Locale locale) {
+	public void addMetaTag(final String name, final String content) {
 		if (content != null) {
-			if (MetaTagName.PAGE_TITLE == name)
+			if ("page title".equals(name)) {
 				setTitle(content);
-			else {
+			} else {
 				head.appendChild(
 					new MetaElement().
-						setName(name.getLocalizedName().get(locale)).
+						setName(name).
 						setContent(stripTags(content)));
 			}
 		}
+	}
+
+	private static Pattern tags = compile("(<([^>]+)>)");
+	private static Pattern br = compile("(<[bB][rR]([^>]+)>)");
+
+	private static String stripTags(final String arg) {
+
+		String result = br.matcher(arg).replaceAll(" ");
+		result = tags.matcher(result).replaceAll("");
+		return result;
 	}
 
 	@Override

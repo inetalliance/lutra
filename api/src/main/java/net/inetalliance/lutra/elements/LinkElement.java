@@ -1,19 +1,18 @@
 package net.inetalliance.lutra.elements;
 
-import net.inetalliance.funky.StringFun;
 import net.inetalliance.lutra.rules.AttributeRule;
 import net.inetalliance.lutra.rules.ChildRule;
 import net.inetalliance.lutra.rules.MayHaveAttribute;
-import net.inetalliance.types.www.ContentType;
 
 import java.util.EnumSet;
+import java.util.Optional;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
-import static net.inetalliance.funky.StringFun.secureUrl;
-import static net.inetalliance.types.www.ContentType.CSS;
+import static java.util.Arrays.*;
+import static java.util.stream.Collectors.*;
 
-public class LinkElement extends CommonAbstractElement<LinkElement> implements HeadElementChild {
+public class LinkElement
+	extends CommonAbstractElement<LinkElement>
+	implements HeadElementChild {
 	private static final AttributeRule[] attributeRules =
 		{
 			new MayHaveAttribute(Attribute.union(Attribute.COMMON,
@@ -34,7 +33,7 @@ public class LinkElement extends CommonAbstractElement<LinkElement> implements H
 	public static LinkElement css(final String href) {
 		return new LinkElement().
 			setRel("stylesheet").
-			setType(CSS).
+			setType("text/css").
 			setMedia("screen").
 			setHref(href);
 	}
@@ -54,6 +53,13 @@ public class LinkElement extends CommonAbstractElement<LinkElement> implements H
 
 	public final String getType() {
 		return getAttribute(Attribute.TYPE);
+	}
+
+	static String secureUrl(final String url) {
+		return Optional.ofNullable(url)
+			.filter(u -> u.startsWith("http://"))
+			.map(u -> "https" + u.substring(4))
+			.orElse(url);
 	}
 
 	@Override
@@ -78,7 +84,7 @@ public class LinkElement extends CommonAbstractElement<LinkElement> implements H
 
 	@Override
 	public LinkElement setClass(final Enum<?>... cssClasses) {
-		return setClass(stream(cssClasses).map(StringFun::enumToCamelCase).collect(joining(" ")));
+		return setClass(stream(cssClasses).map(Element::enumToCamelCase).collect(joining(" ")));
 	}
 
 	@Override
@@ -98,8 +104,8 @@ public class LinkElement extends CommonAbstractElement<LinkElement> implements H
 		return this;
 	}
 
-	public final LinkElement setType(final ContentType value) {
-		setAttribute(Attribute.TYPE, value.value);
+	public final LinkElement setType(final String value) {
+		setAttribute(Attribute.TYPE, value);
 		return this;
 	}
 

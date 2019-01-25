@@ -1,68 +1,68 @@
 package net.inetalliance.lutra.elements;
 
-import net.inetalliance.funky.Escaper;
-import net.inetalliance.funky.StringFun;
 import net.inetalliance.lutra.listeners.CloneListener;
 import net.inetalliance.lutra.rules.AttributeRule;
 import net.inetalliance.lutra.rules.ChildRule;
+import net.inetalliance.lutra.util.Escaper;
 
 import java.io.IOException;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
+import static java.util.Arrays.*;
+import static java.util.stream.Collectors.*;
 
-public class TextContent extends Element
+public class TextContent
+	extends Element
 	implements
 	// child interfaces of types that take text content:
-	AbbrElementChild,
-	AcronymElementChild,
-	AddressElementChild,
-	AElementChild,
-	BdoElementChild,
-	BElementChild,
-	BigElementChild,
-	ButtonElementChild,
-	CaptionElementChild,
-	CiteElementChild,
-	CodeElementChild,
-	DdElementChild,
-	DelElementChild,
-	DfnElementChild,
-	DivElementChild,
-	DtElementChild,
-	EmElementChild,
-	EmbedElementChild,
-	FieldsetElementChild,
-	H1ElementChild,
-	H2ElementChild,
-	H3ElementChild,
-	H4ElementChild,
-	H5ElementChild,
-	H6ElementChild,
-	IElementChild,
-	InsElementChild,
-	KbdElementChild,
-	LabelElementChild,
-	LegendElementChild,
-	LiElementChild,
-	ObjectElementChild,
-	OptionElementChild,
-	PElementChild,
-	PreElementChild,
-	SampElementChild,
-	ScriptElementChild,
-	SmallElementChild,
-	SpanElementChild,
-	StrongElementChild,
-	StyleElementChild,
-	SubElementChild,
-	SupElementChild,
-	TdElementChild,
-	ThElementChild,
-	TextareaElementChild,
-	TitleElementChild,
-	TtElementChild,
-	VarElementChild {
+		AbbrElementChild,
+		AcronymElementChild,
+		AddressElementChild,
+		AElementChild,
+		BdoElementChild,
+		BElementChild,
+		BigElementChild,
+		ButtonElementChild,
+		CaptionElementChild,
+		CiteElementChild,
+		CodeElementChild,
+		DdElementChild,
+		DelElementChild,
+		DfnElementChild,
+		DivElementChild,
+		DtElementChild,
+		EmElementChild,
+		EmbedElementChild,
+		FieldsetElementChild,
+		H1ElementChild,
+		H2ElementChild,
+		H3ElementChild,
+		H4ElementChild,
+		H5ElementChild,
+		H6ElementChild,
+		IElementChild,
+		InsElementChild,
+		KbdElementChild,
+		LabelElementChild,
+		LegendElementChild,
+		LiElementChild,
+		ObjectElementChild,
+		OptionElementChild,
+		PElementChild,
+		PreElementChild,
+		SampElementChild,
+		ScriptElementChild,
+		SmallElementChild,
+		SpanElementChild,
+		StrongElementChild,
+		StyleElementChild,
+		SubElementChild,
+		SupElementChild,
+		TdElementChild,
+		ThElementChild,
+		TextareaElementChild,
+		TitleElementChild,
+		TtElementChild,
+		VarElementChild {
 
 	private final String content;
 
@@ -95,7 +95,7 @@ public class TextContent extends Element
 
 	@Override
 	public TextContent setClass(final Enum<?>... cssClasses) {
-		return setClass(stream(cssClasses).map(StringFun::enumToCamelCase).collect(joining(" ")));
+		return setClass(stream(cssClasses).map(Element::enumToCamelCase).collect(joining(" ")));
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class TextContent extends Element
 
 	@Override
 	public boolean toString(final Appendable output, final boolean pretty, final int depth,
-	                        final ElementType previous, final ElementType next) throws IOException {
+		final ElementType previous, final ElementType next) throws IOException {
 		output.append(toString());
 		return false;
 	}

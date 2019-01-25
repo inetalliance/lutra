@@ -7,9 +7,9 @@ import net.inetalliance.lutra.rules.MustHaveAtLeastOneChildOf;
 
 import java.util.EnumSet;
 
-import static net.inetalliance.funky.Funky.stream;
-
-public class OlElement extends CommonAbstractElement<OlElement> implements BlockElement {
+public class OlElement
+	extends CommonAbstractElement<OlElement>
+	implements BlockElement {
 
 	private static final ChildRule[] childRules =
 		{
@@ -27,7 +27,7 @@ public class OlElement extends CommonAbstractElement<OlElement> implements Block
 	}
 
 	public Iterable<LiElement> getItems() {
-		return () -> stream(getChildren()).filter(e -> e instanceof LiElement).map(e -> (LiElement) e).iterator();
+		return () -> getChildren().stream().filter(e -> e instanceof LiElement).map(e -> (LiElement) e).iterator();
 
 	}
 

@@ -1,6 +1,5 @@
 package net.inetalliance.lutra.elements;
 
-import net.inetalliance.funky.StringFun;
 import net.inetalliance.lutra.rules.AttributeRule;
 import net.inetalliance.lutra.rules.ChildRule;
 import net.inetalliance.lutra.rules.MayHaveAttribute;
@@ -8,10 +7,12 @@ import net.inetalliance.lutra.rules.MustHaveAttribute;
 
 import java.util.EnumSet;
 
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
+import static java.util.Arrays.*;
+import static java.util.stream.Collectors.*;
 
-public class AreaElement extends Element implements MapElementChild {
+public class AreaElement
+	extends Element
+	implements MapElementChild {
 
 	private static final AttributeRule[] attributeRules =
 		{
@@ -85,7 +86,7 @@ public class AreaElement extends Element implements MapElementChild {
 
 	@Override
 	public AreaElement setClass(final Enum<?>... cssClasses) {
-		return setClass(stream(cssClasses).map(StringFun::enumToCamelCase).collect(joining(" ")));
+		return setClass(stream(cssClasses).map(Element::enumToCamelCase).collect(joining(" ")));
 	}
 
 	public final AreaElement setCoords(final String value) {

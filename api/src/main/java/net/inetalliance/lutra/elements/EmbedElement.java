@@ -3,15 +3,17 @@ package net.inetalliance.lutra.elements;
 import net.inetalliance.lutra.rules.AttributeRule;
 import net.inetalliance.lutra.rules.ChildRule;
 import net.inetalliance.lutra.rules.MayHaveAttribute;
-import net.inetalliance.types.www.ContentType;
 
 import java.util.EnumSet;
 
 /**
- * The <embed> element is not officially part of the XHTML Strick Specification, but its usage is so widespread that it
+ * The <embed> element is not officially part of the XHTML Strick Specification, but its usage is so widespread
+ * that it
  * has been included in lutra.
  */
-public class EmbedElement extends CommonAbstractElement<EmbedElement> implements InlineElement {
+public class EmbedElement
+	extends CommonAbstractElement<EmbedElement>
+	implements InlineElement {
 
 	private static final AttributeRule[] attributeRules =
 		{
@@ -30,7 +32,8 @@ public class EmbedElement extends CommonAbstractElement<EmbedElement> implements
 	}
 
 	public EmbedElement(final EmbedElementChild... children) {
-		super(EmbedElement.class, ElementType.EMBED, ChildRule.ANY_BLOCK_OR_INLINE_OR_TEXT_ELEMENTS, attributeRules, children);
+		super(EmbedElement.class, ElementType.EMBED, ChildRule.ANY_BLOCK_OR_INLINE_OR_TEXT_ELEMENTS, attributeRules,
+			children);
 	}
 
 	@Override
@@ -82,8 +85,8 @@ public class EmbedElement extends CommonAbstractElement<EmbedElement> implements
 		return this;
 	}
 
-	public final EmbedElement setType(final ContentType value) {
-		setAttribute(Attribute.TYPE, value.value);
+	public final EmbedElement setType(final String value) {
+		setAttribute(Attribute.TYPE, value);
 		return this;
 	}
 

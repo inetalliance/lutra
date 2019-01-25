@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
-import static net.inetalliance.funky.Funky.stream;
-
-public abstract class AttributeQuery<T> implements Predicate<Element> {
+public abstract class AttributeQuery<T>
+	implements Predicate<Element> {
 	public final Pattern pattern;
 	public final Attribute attribute;
 	public T lastMatch;
@@ -31,8 +31,9 @@ public abstract class AttributeQuery<T> implements Predicate<Element> {
 		if (value != null) {
 			final Matcher matcher = pattern.matcher(value);
 			if (matcher.matches()) {
-				if (matcher.groupCount() > 0)
+				if (matcher.groupCount() > 0) {
 					lastMatch = fromString(matcher.group(1));
+				}
 				return true;
 			}
 		}
@@ -42,16 +43,17 @@ public abstract class AttributeQuery<T> implements Predicate<Element> {
 
 	public Map<Element, T> queryToMap(final Element root) {
 		final Map<Element, T> map = new HashMap<Element, T>(0);
-		stream(root.getDescendants()).filter(this).forEach(element -> {
+		StreamSupport.stream(root.getDescendants().spliterator(), false).filter(this).forEach(element -> {
 			final Matcher matcher = pattern.matcher(element.getAttribute(attribute));
-			if (matcher.find())
+			if (matcher.find()) {
 				map.put(element, fromString(matcher.group(1)));
+			}
 		});
 		return map;
 	}
 
 	public T query(final Element root) {
-		return stream(root.getTree())
+		return StreamSupport.stream(root.getTree().spliterator(), false)
 			.filter(this)
 			.map(e -> pattern.matcher(e.getAttribute(attribute)))
 			.filter(Matcher::find)

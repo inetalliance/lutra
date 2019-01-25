@@ -7,7 +7,6 @@ import net.inetalliance.lutra.rules.MayHaveChild;
 
 import java.util.EnumSet;
 
-import static net.inetalliance.funky.StringFun.secureUrl;
 
 
 public class IframeElement extends CommonAbstractElement<IframeElement> implements InlineElement {
@@ -85,7 +84,7 @@ public class IframeElement extends CommonAbstractElement<IframeElement> implemen
 
 	@Override
 	public void secure() {
-		setSrc(secureUrl(getSrc()));
+		setSrc(LinkElement.secureUrl(getSrc()));
 	}
 
 	public final IframeElement setSrc(final String value) {

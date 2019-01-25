@@ -5,10 +5,10 @@ import net.inetalliance.lutra.elements.Attribute;
 import net.inetalliance.lutra.elements.Element;
 
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
-import static net.inetalliance.funky.Funky.stream;
-
-public class PreAddChildIdListener implements PreAddChildListener {
+public class PreAddChildIdListener
+	implements PreAddChildListener {
 	private final Map<String, Element> map;
 
 	public PreAddChildIdListener(final Document destinationDocument) {
@@ -17,8 +17,7 @@ public class PreAddChildIdListener implements PreAddChildListener {
 
 	@Override
 	public void preAdd(final Element newChild, final Element destParent) {
-		stream(newChild.getDescendants()).filter(Attribute.ID.has).forEach(element -> {
-			map.put(element.getId(), element);
-		});
+		StreamSupport.stream(newChild.getDescendants().spliterator(), false)
+			.filter(Attribute.ID.has).forEach(element -> map.put(element.getId(), element));
 	}
 }

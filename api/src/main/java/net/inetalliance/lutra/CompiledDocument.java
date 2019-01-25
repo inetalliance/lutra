@@ -4,10 +4,10 @@ import net.inetalliance.lutra.elements.*;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.StreamSupport;
 
-import static net.inetalliance.funky.Funky.stream;
-
-public abstract class CompiledDocument extends HtmlElement {
+public abstract class CompiledDocument
+	extends HtmlElement {
 	protected final Map<String, Element> byId;
 
 	protected CompiledDocument() {
@@ -31,12 +31,11 @@ public abstract class CompiledDocument extends HtmlElement {
 	}
 
 	public final void reindex() {
-		stream(getBody().getDescendants()).filter(Attribute.ID.has).forEach(element -> {
-			byId.put(element.getId(), element);
-		});
+		StreamSupport.stream(getBody().getDescendants().spliterator(), false)
+			.filter(Attribute.ID.has).forEach(element -> byId.put(element.getId(), element));
 	}
 
-	public static interface Factory {
+	public interface Factory {
 		CompiledDocument $(final String path);
 	}
 }

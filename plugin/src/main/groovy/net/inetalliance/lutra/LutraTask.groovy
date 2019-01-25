@@ -1,15 +1,12 @@
 package net.inetalliance.lutra
 
-import net.inetalliance.funky.Escaper
-import net.inetalliance.funky.Funky
-import net.inetalliance.funky.StringFun
-import net.inetalliance.funky.iterators.BreadthFirstFileIterator
 import net.inetalliance.lutra.elements.Attribute
 import net.inetalliance.lutra.elements.Element
 import net.inetalliance.lutra.elements.HtmlElement
 import net.inetalliance.lutra.elements.TextContent
 import net.inetalliance.lutra.rules.ValidationErrors
-import net.inetalliance.types.www.ContentType
+import net.inetalliance.lutra.util.BreadthFirstIterator
+import net.inetalliance.lutra.util.Escaper
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import org.xml.sax.SAXException
@@ -61,19 +58,26 @@ class LutraTask extends DefaultTask {
     final Collection<String> parseErrors = new ArrayList<>(1024)
     final Collection<String> validationErrors = new ArrayList<>(1024)
 
-    final Predicate<? super File> exclude
-    if (preparsed || StringFun.isEmpty(this.exclude))   // never exclude preparsed
+    Predicate<? super File> exclude
+    if (preparsed || this.exclude == null || this.exclude.isEmpty()) {
       exclude = { File f -> true }
-    else {
+    } else {
       def p = Pattern.compile(this.exclude)
       exclude = { File f -> !p.matcher(f.getAbsolutePath()).matches() }
     }
 
 
-    Funky.stream({ -> new BreadthFirstFileIterator(root) })
-        .filter(ContentType.HTML.filePredicate)
-        .filter(exclude)
-        .forEach({ genInput ->
+    new BreadthFirstIterator<File>(root) {
+      @Override
+      protected Iterator<File> getChildren(final File object) {
+        return Arrays.stream(object.listFiles(new FileFilter() {
+          @Override
+          boolean accept(final File f) {
+            return f.getName().endsWith(".html") && !exclude.test(f)
+          }
+        })).iterator()
+      }
+    }.each({ genInput ->
       try {
         final String filePath = genInput.getAbsolutePath().replace(root.getAbsolutePath(), "")
         final int lastSlash = filePath.lastIndexOf('/')

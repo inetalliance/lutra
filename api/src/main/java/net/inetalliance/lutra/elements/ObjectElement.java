@@ -4,21 +4,19 @@ import net.inetalliance.lutra.rules.AttributeRule;
 import net.inetalliance.lutra.rules.ChildRule;
 import net.inetalliance.lutra.rules.MayHaveAttribute;
 import net.inetalliance.lutra.rules.MayHaveChild;
-import net.inetalliance.types.www.ContentType;
 
 import java.util.EnumSet;
 
-import static net.inetalliance.funky.StringFun.secureUrl;
+import static net.inetalliance.lutra.elements.LinkElement.*;
 
-
-public class ObjectElement extends CommonAbstractElement<ObjectElement> implements InlineElement {
-	@SuppressWarnings("unchecked")
+public class ObjectElement
+	extends CommonAbstractElement<ObjectElement>
+	implements InlineElement {
 	private static final ChildRule[] childRules =
 		{
 			new MayHaveChild(ElementType.union(ElementType.BLOCK_AND_INLINE_AND_TEXT_ELEMENTS,
 				EnumSet.of(ElementType.PARAM)))
 		};
-	@SuppressWarnings("unchecked")
 	private static final AttributeRule[] attributeRules =
 		{
 			new MayHaveAttribute(Attribute.union(Attribute.COMMON,
@@ -166,10 +164,6 @@ public class ObjectElement extends CommonAbstractElement<ObjectElement> implemen
 	public final ObjectElement setTabIndex(final String value) {
 		setAttribute(Attribute.TABINDEX, value);
 		return this;
-	}
-
-	public final ObjectElement setType(final ContentType value) {
-		return setType(value.value);
 	}
 
 	public final ObjectElement setType(final String value) {

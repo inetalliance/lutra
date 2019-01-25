@@ -1,7 +1,5 @@
 package net.inetalliance.lutra;
 
-import net.inetalliance.file.FileReloader;
-import net.inetalliance.file.ReloadableFile;
 import net.inetalliance.lutra.elements.*;
 import net.inetalliance.lutra.listeners.DocumentParseListener;
 import net.inetalliance.lutra.rules.ValidationErrors;
@@ -14,7 +12,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public class DocumentBuilder extends DefaultHandler implements ReloadableFile {
+public class DocumentBuilder
+	extends DefaultHandler
+	implements ReloadableFile {
 	public static final Map<String, String> entityFiles;
 	private static final Collection<DocumentParseListener> parseListeners = new ArrayList<>(0);
 	private final Stack<Element> stack;
@@ -36,11 +36,13 @@ public class DocumentBuilder extends DefaultHandler implements ReloadableFile {
 	}
 
 	private static String read(final String resource) {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(DocumentBuilder.class.getResourceAsStream(resource)))) {
+		try (BufferedReader reader = new BufferedReader(
+			new InputStreamReader(DocumentBuilder.class.getResourceAsStream(resource)))) {
 			final StringBuilder s = new StringBuilder();
 			String line;
-			while ((line = reader.readLine()) != null)
+			while ((line = reader.readLine()) != null) {
 				s.append(line).append('\n');
+			}
 			return s.toString();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -62,7 +64,7 @@ public class DocumentBuilder extends DefaultHandler implements ReloadableFile {
 	}
 
 	public static void validate(final File file, final Collection<String> parseErrors,
-	                            final Collection<String> validationErrors)
+		final Collection<String> validationErrors)
 		throws IOException {
 		final DocumentBuilder builder = new DocumentBuilder(file);
 		try {
@@ -97,18 +99,21 @@ public class DocumentBuilder extends DefaultHandler implements ReloadableFile {
 
 	public <D extends LazyDocument> D build(final Class<D> type)
 		throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
-		if (cachedConstructor == null)
+		if (cachedConstructor == null) {
 			cachedConstructor = type.getConstructor(DocumentBuilder.class);
-		if (reloader != null)
+		}
+		if (reloader != null) {
 			reloader.reloadIfNeeded();
+		}
 		final D document = type.cast(cachedConstructor.newInstance(this));
 		document.setFile(file);
 		return document;
 	}
 
 	public LazyDocument buildGeneric() {
-		if (reloader != null)
+		if (reloader != null) {
 			reloader.reloadIfNeeded();
+		}
 		final LazyDocument document = new LazyDocument(this);
 		document.setFile(file);
 		return document;
@@ -137,28 +142,34 @@ public class DocumentBuilder extends DefaultHandler implements ReloadableFile {
 
 	@SuppressWarnings({"EnumSwitchStatementWhichMissesCases"})
 	@Override
-	public void startElement(final String uri, final String localName, final String qName, final Attributes attributes)
+	public void startElement(final String uri, final String localName, final String qName,
+		final Attributes attributes)
 		throws SAXException {
 		final ElementType type = ElementType.fromName(qName);
-		if (type == null)
+		if (type == null) {
 			throw new SAXParseException(String.format("Unknown element type \"%s\"", qName), locator);
+		}
 		final Element element = type.create();
-		if (stack.isEmpty())
+		if (stack.isEmpty()) {
 			root = element;
-		else
+		} else {
 			stack.peek().appendChild(element);
+		}
 		for (int i = 0; i < attributes.getLength(); i++) {
 			final String attributeName = attributes.getQName(i);
 			final String attributeValue = attributes.getValue(i);
 			final Attribute attribute = Attribute.fromName(attributeName);
 			if (attribute == null) {
-				if (attributeName.startsWith("data-"))
+				if (attributeName.startsWith("data-")) {
 					element.put(attributeName, attributeValue);
+				}
 				continue;
 			} else if (attribute == Attribute.ID) {
-				if (byId.put(attributeValue, element) != null)
-					throw new SAXParseException(String.format("Duplicate %s attribute: \"%s\"", Attribute.ID, attributeValue),
+				if (byId.put(attributeValue, element) != null) {
+					throw new SAXParseException(
+						String.format("Duplicate %s attribute: \"%s\"", Attribute.ID, attributeValue),
 						locator);
+				}
 			}
 			element.setAttribute(attribute, attributeValue);
 		}
@@ -234,10 +245,11 @@ public class DocumentBuilder extends DefaultHandler implements ReloadableFile {
 	public InputSource resolveEntity(final String publicId, final String systemId)
 		throws IOException, SAXException {
 		final String file = entityFiles.get(publicId);
-		if (file != null)
+		if (file != null) {
 			return new InputSource(new StringReader(file));
-		else
+		} else {
 			return super.resolveEntity(publicId, systemId);
+		}
 	}
 
 	public void load(final InputStream inputStream)
@@ -250,14 +262,17 @@ public class DocumentBuilder extends DefaultHandler implements ReloadableFile {
 			xr.setFeature("http://xml.org/sax/features/validation", false);
 			xr.setEntityResolver(this);
 			xr.parse(new InputSource(inputStream));
-			if (reloader != null)
+			if (reloader != null) {
 				reloader.setLastRead(System.currentTimeMillis());
+			}
 			try {
-				for (final DocumentParseListener listener : parseListeners)
+				for (final DocumentParseListener listener : parseListeners) {
 					listener.documentParsed(this);
+				}
 			} catch (Exception e) {
-				if (reloader != null)
+				if (reloader != null) {
 					reloader.forceReload();
+				}
 				throw e;
 			}
 		} finally {

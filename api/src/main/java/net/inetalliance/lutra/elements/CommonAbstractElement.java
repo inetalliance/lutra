@@ -1,6 +1,5 @@
 package net.inetalliance.lutra.elements;
 
-import net.inetalliance.funky.StringFun;
 import net.inetalliance.lutra.MicrodataType;
 import net.inetalliance.lutra.rules.AttributeRule;
 import net.inetalliance.lutra.rules.ChildRule;
@@ -10,24 +9,24 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.joining;
+import static java.util.Arrays.*;
+import static java.util.stream.Collectors.*;
 
-public abstract class CommonAbstractElement<T extends CommonAbstractElement<T>> extends Element {
+public abstract class CommonAbstractElement<T extends CommonAbstractElement<T>>
+	extends Element {
 	private static final Pattern SPACE = Pattern.compile(" +");
 
 	private final Class<T> concreteType;
 
-	protected CommonAbstractElement(final Class<T> concreteType, final ElementType type, final ChildRule[] childRules,
-	                                final AttributeRule[] attributeRules, final Child... children) {
+	protected CommonAbstractElement(final Class<T> concreteType, final ElementType type,
+		final ChildRule[] childRules,
+		final AttributeRule[] attributeRules, final Child... children) {
 		super(type, childRules, attributeRules, children);
 		this.concreteType = concreteType;
 	}
 
 	@Override
-	public abstract T copy()
-		;
+	public abstract T copy();
 
 	@Override
 	public T addClass(final String... cssClasses) {
@@ -243,21 +242,25 @@ public abstract class CommonAbstractElement<T extends CommonAbstractElement<T>> 
 		final String[] previousClasses = getClasses(element);
 		final StringBuilder buffer = new StringBuilder(0);
 		for (final String previousClass : previousClasses) {
-			if (asList(cssClasses).contains(previousClass))
+			if (asList(cssClasses).contains(previousClass)) {
 				continue;
-			if (buffer.length() > 0)
+			}
+			if (buffer.length() > 0) {
 				buffer.append(' ');
+			}
 			buffer.append(previousClass);
 		}
 		for (final String cssClass : cssClasses) {
-			if (buffer.length() > 0)
+			if (buffer.length() > 0) {
 				buffer.append(' ');
+			}
 			buffer.append(cssClass);
 		}
-		if (buffer.length() == 0)
+		if (buffer.length() == 0) {
 			element.removeAttribute(Attribute.CLASS);
-		else
+		} else {
 			element.setAttribute(Attribute.CLASS, buffer.toString());
+		}
 		return element;
 	}
 
@@ -270,15 +273,17 @@ public abstract class CommonAbstractElement<T extends CommonAbstractElement<T>> 
 		final StringBuilder buffer = new StringBuilder(0);
 		for (final String token : element.getClasses()) {
 			if (!Arrays.asList(cssClasses).contains(token)) {
-				if (buffer.length() > 0)
+				if (buffer.length() > 0) {
 					buffer.append(' ');
+				}
 				buffer.append(token);
 			}
 		}
-		if (buffer.length() == 0)
+		if (buffer.length() == 0) {
 			element.removeAttribute(Attribute.CLASS);
-		else
+		} else {
 			element.setAttribute(Attribute.CLASS, buffer.toString());
+		}
 		return element;
 	}
 
@@ -287,18 +292,20 @@ public abstract class CommonAbstractElement<T extends CommonAbstractElement<T>> 
 		final String[] tokens = element.getClasses();
 		final Collection<String> removed = new ArrayList<String>(tokens.length);
 		for (final String token : tokens) {
-			if (pattern.matcher(token).matches())
+			if (pattern.matcher(token).matches()) {
 				removed.add(token);
-			else {
-				if (buffer.length() > 0)
+			} else {
+				if (buffer.length() > 0) {
 					buffer.append(' ');
+				}
 				buffer.append(token);
 			}
 		}
-		if (buffer.length() == 0)
+		if (buffer.length() == 0) {
 			element.removeAttribute(Attribute.CLASS);
-		else
+		} else {
 			element.setAttribute(Attribute.CLASS, buffer.toString());
+		}
 		return removed;
 	}
 
@@ -308,6 +315,6 @@ public abstract class CommonAbstractElement<T extends CommonAbstractElement<T>> 
 	}
 
 	public static <T extends Element> T setClass(final T element, final Enum<?>... cssClasses) {
-		return setClass(element, stream(cssClasses).map(StringFun::enumToCamelCase).collect(joining(" ")));
+		return setClass(element, stream(cssClasses).map(Element::enumToCamelCase).collect(joining(" ")));
 	}
 }

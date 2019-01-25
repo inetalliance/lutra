@@ -8,65 +8,60 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
-import static net.inetalliance.funky.Funky.stream;
-import static net.inetalliance.lutra.elements.DlElement.filter;
+import static net.inetalliance.lutra.elements.DlElement.*;
 
-public abstract class ClassQuery<T> implements Predicate<Element> {
+public abstract class ClassQuery<T>
+	implements Predicate<Element> {
 
 	public final Pattern pattern;
 
-	public ClassQuery(final String pattern)
-	{
+	public ClassQuery(final String pattern) {
 		this.pattern = Pattern.compile(pattern);
 	}
 
 	@Override
-	public boolean test(final Element object)
-	{
-		for (final String cssClass : object.getClasses())
-		{
+	public boolean test(final Element object) {
+		for (final String cssClass : object.getClasses()) {
 			final Matcher matcher = pattern.matcher(cssClass);
-			if (matcher.matches())
+			if (matcher.matches()) {
 				return true;
+			}
 		}
 		return false;
 	}
 
-	public Map<Element, T> queryToMap(final Element root)
-	{
+	public Map<Element, T> queryToMap(final Element root) {
 		final Map<Element, T> map = new HashMap<Element, T>(0);
-		stream(getIterable(root)).filter(this).forEach(element -> {
-				for (final String cssClass : element.getClasses()) {
-					final Matcher matcher = pattern.matcher(cssClass);
-					if (matcher.find())
-						map.put(element, fromString(matcher.group(1)));
+		StreamSupport.stream(getIterable(root).spliterator(), false).filter(this).forEach(element -> {
+			for (final String cssClass : element.getClasses()) {
+				final Matcher matcher = pattern.matcher(cssClass);
+				if (matcher.find()) {
+					map.put(element, fromString(matcher.group(1)));
 				}
+			}
 		});
 		return map;
 	}
 
-	public void removeClass(final Element element)
-	{
+	public void removeClass(final Element element) {
 		element.removeClass(pattern);
 	}
 
-	public T query(final Element root)
-	{
-		for (final Element element : filter(getIterable(root)))
-		{
-			for (final String cssClass : element.getClasses())
-			{
+	public T query(final Element root) {
+		for (final Element element : filter(getIterable(root))) {
+			for (final String cssClass : element.getClasses()) {
 				final Matcher matcher = pattern.matcher(cssClass);
-				if (matcher.find())
+				if (matcher.find()) {
 					return fromString(matcher.group(1));
+				}
 			}
 		}
 		return null;
 	}
 
-	private static Iterable<Element> getIterable(final Element root)
-	{
+	private static Iterable<Element> getIterable(final Element root) {
 		return root == null ? Set.of() : root.getTree();
 	}
 

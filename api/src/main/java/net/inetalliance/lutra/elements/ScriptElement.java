@@ -8,10 +8,12 @@ import net.inetalliance.lutra.rules.MustHaveAttribute;
 import java.io.IOException;
 import java.util.EnumSet;
 
-import static net.inetalliance.funky.StringFun.secureUrl;
+import static net.inetalliance.lutra.elements.LinkElement.*;
 
-
-public class ScriptElement extends Element implements HeadElementChild, BlockElement {
+public class ScriptElement
+	extends Element
+	implements HeadElementChild,
+	           BlockElement {
 	private static final AttributeRule[] attributeRules =
 		{
 			new MayHaveAttribute(EnumSet.of(Attribute.SRC, Attribute.TYPE, Attribute.CHARSET, Attribute.ID)),
@@ -72,19 +74,23 @@ public class ScriptElement extends Element implements HeadElementChild, BlockEle
 
 	@Override
 	protected boolean outputChild(final Appendable output, final Element child, final boolean pretty,
-	                              final int depth, final ElementType previous, final ElementType next)
+		final int depth, final ElementType previous, final ElementType next)
 		throws IOException {
 		final boolean hasSrc = getSrc() != null;
 		if (!hasSrc) {
-			if (useCdata)
+			if (useCdata) {
 				output.append("/*<![CDATA[*/");
-			if (pretty)
+			}
+			if (pretty) {
 				output.append('\n');
+			}
 			child.toString(output, false, depth, previous, next);
-			if (pretty)
+			if (pretty) {
 				output.append('\n');
-			if (useCdata)
+			}
+			if (useCdata) {
 				output.append("/*]]>*/");
+			}
 		}
 		return false;
 	}

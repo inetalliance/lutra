@@ -1,23 +1,31 @@
 package net.inetalliance.lutra;
 
-import net.inetalliance.funky.Funky;
 import net.inetalliance.lutra.elements.Element;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 public interface Elements {
+
+	static Stream<Element> nonNull(final Element... elements) {
+		return Arrays.stream(elements).filter(Objects::nonNull);
+	}
+
 	static void remove(final Element... elements) {
-		Funky.nonNull(elements).forEach(Element::remove);
+		nonNull(elements).forEach(Element::remove);
 	}
 
 	static void removeId(final Element... elements) {
-		Funky.nonNull(elements).forEach(Element::removeId);
+		nonNull(elements).forEach(Element::removeId);
 	}
 
 	static void hide(final Element... elements) {
-		Funky.nonNull(elements).forEach(Element::hide);
+		nonNull(elements).forEach(Element::hide);
 	}
 
 	static void show(final Element... elements) {
-		Funky.nonNull(elements).forEach(Element::show);
+		nonNull(elements).forEach(Element::show);
 	}
 
 	static void remove(final Iterable<? extends Element> i) {
@@ -37,7 +45,7 @@ public interface Elements {
 	}
 
 	static void setVisible(final boolean visible, final Element... elements) {
-		Funky.nonNull(elements).forEach(e -> e.setVisible(visible));
+		nonNull(elements).forEach(e -> e.setVisible(visible));
 	}
 
 	static void setVisible(final boolean visible, final Iterable<? extends Element> i) {
@@ -45,7 +53,7 @@ public interface Elements {
 	}
 
 	static void removeChildren(final Element... elements) {
-		Funky.nonNull(elements).forEach(Element::removeChildren);
+		nonNull(elements).forEach(Element::removeChildren);
 	}
 
 	static void removeChildren(final Iterable<? extends Element> elements) {

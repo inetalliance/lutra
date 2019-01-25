@@ -1,18 +1,12 @@
 package net.inetalliance.lutra.elements;
 
-
-import net.inetalliance.funky.Funky;
-import net.inetalliance.funky.StringFun;
-
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-
-public enum Attribute
-{
+public enum Attribute {
 	ID,
 	CLASS,
 	STYLE,
@@ -106,72 +100,68 @@ public enum Attribute
 	HEIGHT,
 	ITEMPROP,
 	ITEMTYPE,
-  PLACEHOLDER,
-  HTTP_EQUIV("http-equiv"),
-  // Crazy modern attributes
-  AUTOCAPITALIZE,
-  AUTOCOMPLETE,
-  AUTOCORRECT,
-  SPELLCHECK;
+	PLACEHOLDER,
+	HTTP_EQUIV("http-equiv"),
+	// Crazy modern attributes
+	AUTOCAPITALIZE,
+	AUTOCOMPLETE,
+	AUTOCORRECT,
+	SPELLCHECK;
 
 	public static final EnumSet<Attribute> COMMON =
-			EnumSet.of(ID, CLASS, TITLE, STYLE, ONCLICK, ONDBLCLICK, ONMOUSEDOWN, ONMOUSEUP,
-			           ONMOUSEOVER, ONMOUSEMOVE, ONMOUSEOUT, ONKEYPRESS, ONKEYDOWN, ONKEYUP, ITEMPROP, ITEMTYPE);
+		EnumSet.of(ID, CLASS, TITLE, STYLE, ONCLICK, ONDBLCLICK, ONMOUSEDOWN, ONMOUSEUP,
+			ONMOUSEOVER, ONMOUSEMOVE, ONMOUSEOUT, ONKEYPRESS, ONKEYDOWN, ONKEYUP, ITEMPROP, ITEMTYPE);
 	public final String name;
 	public final Function<Element, String> from;
 	public final Predicate<Element> has;
 	public final Predicate<Element> doesntHave;
 
-	Attribute()
-	{
+	Attribute() {
 		this(null);
 	}
 
-	Attribute(final String name)
-	{
+	Attribute(final String name) {
 		this.name = name == null ? name().toLowerCase() : name;
 		from = element -> element.getAttribute(Attribute.this);
-
-		doesntHave = Funky.asPredicate(from.andThen(StringFun::isEmpty));
+		doesntHave = e -> {
+			final String attribute = from.apply(e);
+			return attribute == null || attribute.isEmpty();
+		};
 		has = doesntHave.negate();
 	}
 
 	private static final Map<String, Attribute> FROM_NAME;
 
-	static
-	{
+	static {
 		FROM_NAME = new HashMap<>(values().length);
-		for (final Attribute attribute : values())
+		for (final Attribute attribute : values()) {
 			FROM_NAME.put(attribute.name, attribute);
+		}
 	}
 
-	public Predicate<Element> is(final String value)
-	{
+	public Predicate<Element> is(final String value) {
 		return is(value::equals);
 	}
 
-	public Predicate<Element> is(final Predicate<String> predicate)
-	{
+	public Predicate<Element> is(final Predicate<String> predicate) {
 		return element -> predicate.test(element.getAttribute(Attribute.this));
 	}
 
-	public static Attribute fromName(final String name)
-	{
+	public static Attribute fromName(final String name) {
 		return FROM_NAME.get(name);
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return name;
 	}
 
 	@SafeVarargs
-	public static EnumSet<Attribute> union(final EnumSet<Attribute> first, final EnumSet<Attribute>... rest)
-	{
+	public static EnumSet<Attribute> union(final EnumSet<Attribute> first, final EnumSet<Attribute>... rest) {
 		final EnumSet<Attribute> union = EnumSet.copyOf(first);
-		for (final EnumSet<Attribute> set : rest)
+		for (final EnumSet<Attribute> set : rest) {
 			union.addAll(set);
+		}
 		return union;
 	}
 }

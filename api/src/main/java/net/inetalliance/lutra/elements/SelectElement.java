@@ -4,21 +4,18 @@ import net.inetalliance.lutra.rules.AttributeRule;
 import net.inetalliance.lutra.rules.ChildRule;
 import net.inetalliance.lutra.rules.MayHaveAttribute;
 import net.inetalliance.lutra.rules.MustHaveAtLeastOneChildOf;
-import net.inetalliance.types.EnumGroup;
-import net.inetalliance.types.Grouped;
-import net.inetalliance.types.Named;
-import net.inetalliance.types.localized.Localized;
-import net.inetalliance.types.struct.maps.MultivalueMap;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
-import static java.util.Comparator.comparing;
-import static net.inetalliance.funky.Funky.stream;
+import static java.util.Comparator.*;
 
-
-public class SelectElement extends CommonFormElement<SelectElement> implements InlineElement {
+public class SelectElement
+	extends CommonFormElement<SelectElement>
+	implements InlineElement {
 	private static final ChildRule[] childRules =
 		{
 			new MustHaveAtLeastOneChildOf(ElementType.OPTION, ElementType.OPTGROUP)
@@ -40,17 +37,6 @@ public class SelectElement extends CommonFormElement<SelectElement> implements I
 		return (SelectElement) copyWithListeners();
 	}
 
-	public final <E extends Enum<E>> Map<E, OptionElement> addNonLocalizedOptions(final Class<E> type,
-	                                                                              final Locale locale, final E selected) {
-		final Map<E, OptionElement> map = new EnumMap<E, OptionElement>(type);
-		final boolean localized = Localized.class.isAssignableFrom(type);
-		for (final E value : EnumSet.allOf(type))
-			map.put(value,
-				addOption(value.name(), localized ? ((Localized) value).getLocalizedName().get(locale) : value.toString(),
-					value == selected));
-		return map;
-	}
-
 	public final OptionElement addOption(final Object value, final Object label) {
 		return addOption(String.valueOf(value), String.valueOf(label));
 	}
@@ -63,19 +49,20 @@ public class SelectElement extends CommonFormElement<SelectElement> implements I
 		return addOptions(from, to, null);
 	}
 
-	public final <E extends Enum<E> & Localized> void addOptions(final Class<E> type, final Locale locale) {
-		addOptions(type, locale, null);
+	public final <E extends Enum<E>> void addOptions(final Class<E> type, final Function<E, String> namePlucker) {
+		addOptions(type, (Collection<E>) null, namePlucker);
 	}
 
-	public final <E extends Enum<E> & Localized> void addOptions(final Class<E> type, final Collection<E> values,
-	                                                             final Locale locale) {
-		addOptions(type, values, locale, null);
+	public final <E extends Enum<E>> void addOptions(final Class<E> type, final Collection<E> values,
+		final Function<E, String> namePlucker) {
+		addOptions(type, values, null, namePlucker);
 	}
 
 	public final List<OptionElement> addOptions(final int from, final int to, final Integer selected) {
 		final List<OptionElement> options = new ArrayList<OptionElement>(to - from);
-		for (int i = from; i <= to; i++)
+		for (int i = from; i <= to; i++) {
 			options.add(addOption(i, i, i == selected));
+		}
 		return options;
 	}
 
@@ -83,36 +70,41 @@ public class SelectElement extends CommonFormElement<SelectElement> implements I
 		return addOption(String.valueOf(value), String.valueOf(label), selected);
 	}
 
-	public final <E extends Enum<E> & Grouped<E, G> & Localized, G extends Enum<G> & EnumGroup<G, E>>
-	Map<G, OptgroupElement> addOptions(final Class<E> type, final Class<G> groups, final Locale locale) {
-		return addOptions(type, groups, locale, null);
+	public final <E extends Enum<E>, G extends Enum<G>>
+	Map<G, OptgroupElement> addOptions(final Class<E> type, final Class<G> groups,
+		Function<G, String> groupNamePlucker, Function<E, String> namePlucker, BiPredicate<G, E> inGroup) {
+		return addOptions(type, groups, null, groupNamePlucker, namePlucker, inGroup);
 	}
 
-	public final <E extends Enum<E> & Localized> Map<E, OptionElement> addOptions(final Class<E> type,
-	                                                                              final Locale locale, final E selected) {
-		return addOptions(type, EnumSet.allOf(type), locale, selected);
+	public final <E extends Enum<E>>
+	Map<E, OptionElement> addOptions(final Class<E> type, final E selected, final Function<E, String> namePlucker) {
+		return addOptions(type, EnumSet.allOf(type), selected, namePlucker);
 	}
 
-	public final <T extends Named>
-	List<OptionElement> addOptions(final T selected, final Collection<T> items, final Function<T, ?> valuePlucker) {
+	public final <T>
+	List<OptionElement> addOptions(final T selected, final Collection<T> items,
+		final Function<T, String> namePlucker, final Function<T, ?> valuePlucker) {
 		final List<OptionElement> options = new ArrayList<OptionElement>(items.size());
-		for (final T item : items)
-			options.add(addOption(valuePlucker.apply(item), item.getName(), item.equals(selected)));
+		for (final T item : items) {
+			options.add(addOption(valuePlucker.apply(item), namePlucker.apply(item), item.equals(selected)));
+		}
 		return options;
 	}
 
-	public final <G extends Named, T extends Named>
+	public final <G, T>
 	Map<T, OptionElement> addOptions(final T selected, final Map<G, List<T>> map,
-	                                 final Function<T, String> valuePlucker) {
+		final Function<G, String> groupNamePlucker,
+		final Function<T, String> namePlucker,
+		final Function<T, String> valuePlucker) {
 		final Map<T, OptionElement> optionElements = new HashMap<T, OptionElement>(8);
 		for (final Map.Entry<G, List<T>> entry : map.entrySet()) {
 			final G group = entry.getKey();
 			final List<T> items = entry.getValue();
 			final OptgroupElement optgroup = new OptgroupElement();
-			optgroup.setLabel(group.getName());
+			optgroup.setLabel(groupNamePlucker.apply(group));
 			for (final T item : items) {
 				final OptionElement option = new OptionElement();
-				option.setText(item.getName());
+				option.setText(namePlucker.apply(item));
 				option.setValue(valuePlucker.apply(item));
 				option.setSelected(selected != null && selected.equals(item));
 				optionElements.put(item, option);
@@ -123,12 +115,13 @@ public class SelectElement extends CommonFormElement<SelectElement> implements I
 		return optionElements;
 	}
 
-	public final <E extends Enum<E> & Localized> Map<E, OptionElement> addOptions(final Class<E> type,
-	                                                                              final Collection<E> values,
-	                                                                              final Locale locale, final E selected) {
+	public final <E extends Enum<E>> Map<E, OptionElement> addOptions(final Class<E> type,
+		final Collection<E> values,
+		final E selected, Function<E, String> namePlucker) {
 		final Map<E, OptionElement> map = new EnumMap<E, OptionElement>(type);
-		for (final E value : values)
-			map.put(value, addOption(value.name(), value.getLocalizedName().get(locale), value == selected));
+		for (final E value : values) {
+			map.put(value, addOption(value.name(), namePlucker.apply(value), value == selected));
+		}
 		return map;
 	}
 
@@ -140,28 +133,33 @@ public class SelectElement extends CommonFormElement<SelectElement> implements I
 		return option;
 	}
 
-	public final <G extends Named, T extends Named>
-	Map<T, OptionElement> addOptions(final T selected, final Iterable<T> items, final Function<T, G> groupPlucker,
-	                                 final Function<T, String> valuePlucker) {
-		final MultivalueMap<G, T> map = new MultivalueMap<G, T>(8);
-		for (final T item : items)
-			map.add(groupPlucker.apply(item), item);
-		return addOptions(selected, map, valuePlucker);
+	public final <G, T> Map<T, OptionElement> addOptions(final T selected, final Iterable<T> items,
+		final Function<T, G> groupPlucker,
+		final Function<G, String> groupNamePlucker,
+		final Function<T, String> namePlucker,
+		final Function<T, String> valuePlucker) {
+		final Map<G, List<T>> map = new HashMap<>();
+		for (final T item : items) {
+			map.computeIfAbsent(groupPlucker.apply(item), i -> new ArrayList<>()).add(item);
+		}
+		return addOptions(selected, map, groupNamePlucker, namePlucker, valuePlucker);
 	}
 
-	public final <E extends Enum<E> & Grouped<E, G> & Localized, G extends Enum<G> & EnumGroup<G, E>>
-	Map<G, OptgroupElement> addOptions(final Class<E> type, final Class<G> groups, final Locale locale, final E selected) {
+	public final <E extends Enum<E>, G extends Enum<G>>
+	Map<G, OptgroupElement> addOptions(final Class<E> type, final Class<G> groups, final E selected,
+		final Function<G, String> groupNamePlucker, final Function<E, String> namePlucker,
+		BiPredicate<G, E> inGroup) {
 		final EnumSet<E> values = EnumSet.allOf(type);
-		final Map<G, OptgroupElement> map = new EnumMap<G, OptgroupElement>(groups);
+		final Map<G, OptgroupElement> map = new EnumMap<>(groups);
 		for (final G group : EnumSet.allOf(groups)) {
-			final OptgroupElement optGroup = new OptgroupElement().setLabel(group.getLocalizedName().get(locale));
+			final OptgroupElement optGroup = new OptgroupElement().setLabel(groupNamePlucker.apply(group));
 			appendChild(optGroup);
 			map.put(group, optGroup);
-			values.stream().filter(group.getPredicate()).forEach(value -> {
-				optGroup.appendChild(new OptionElement(value.getLocalizedName().get(locale))
+			values.stream()
+				.filter(e -> inGroup.test(group, e))
+				.forEach(value -> optGroup.appendChild(new OptionElement(namePlucker.apply(value))
 					.setValue(value.name())
-					.setSelected(value == selected));
-			});
+					.setSelected(value == selected)));
 		}
 		return map;
 	}
@@ -184,7 +182,7 @@ public class SelectElement extends CommonFormElement<SelectElement> implements I
 
 	public final OptionElement getOptionWithValue(final String value) {
 
-		return stream(getDescendants())
+		return StreamSupport.stream(getDescendants().spliterator(), false)
 			.filter(e -> e instanceof OptionElement)
 			.map(e -> (OptionElement) e)
 			.filter(e -> value.equals(e.getValue()))
@@ -226,13 +224,17 @@ public class SelectElement extends CommonFormElement<SelectElement> implements I
 
 	public final void setValue(final String value) {
 		final AtomicBoolean foundOne = new AtomicBoolean(false);
-		stream(getDescendants()).filter(e -> e instanceof OptionElement).map(o -> (OptionElement) o).forEach(option -> {
-			if (!foundOne.get() && Objects.equals(value, option.getValue())) {
-				option.setSelected(true);
-				foundOne.set(true);  // can't break because we need to set the rest to false
-			} else
-				option.setSelected(false);
-		});
+		StreamSupport.stream(getDescendants().spliterator(), false)
+			.filter(e -> e instanceof OptionElement)
+			.map(o -> (OptionElement) o)
+			.forEach(option -> {
+				if (!foundOne.get() && Objects.equals(value, option.getValue())) {
+					option.setSelected(true);
+					foundOne.set(true);  // can't break because we need to set the rest to false
+				} else {
+					option.setSelected(false);
+				}
+			});
 	}
 
 	public final SelectElement setMultiple(final boolean value) {

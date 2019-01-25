@@ -10,15 +10,16 @@ import net.inetalliance.lutra.rules.MustHaveChildrenInOrder;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.stream.StreamSupport;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
-import static net.inetalliance.funky.Funky.stream;
+import static java.util.function.Function.*;
+import static java.util.stream.Collectors.*;
 import static net.inetalliance.lutra.elements.Attribute.*;
-import static net.inetalliance.lutra.elements.ElementType.BODY;
-import static net.inetalliance.lutra.elements.ElementType.HEAD;
+import static net.inetalliance.lutra.elements.ElementType.*;
 
-public class HtmlElement extends Element implements Document {
+public class HtmlElement
+	extends Element
+	implements Document {
 
 	private static final ChildRule[] childRules =
 		{
@@ -108,7 +109,8 @@ public class HtmlElement extends Element implements Document {
 
 	@Override
 	public Element getById(final String id) {
-		return stream(getRoot().getTree()).filter(new IdPredicate(id)).findFirst().orElse(null);
+		return StreamSupport.stream(getRoot().getTree().spliterator(), false)
+			.filter(new IdPredicate(id)).findFirst().orElse(null);
 	}
 
 	@Override
@@ -118,6 +120,7 @@ public class HtmlElement extends Element implements Document {
 
 	@Override
 	public Map<String, Element> getIdMap() {
-		return stream(getRoot().getTree()).collect(toMap(Element::getId, identity()));
+		return StreamSupport.stream(getRoot().getTree().spliterator(), false)
+			.collect(toMap(Element::getId, identity()));
 	}
 }
