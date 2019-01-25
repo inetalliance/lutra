@@ -29,12 +29,57 @@ class LutraTask extends DefaultTask {
   LutraTask() {
   }
 
+  @SuppressWarnings("unused")
   @TaskAction
   def generate() {
     getLogger().debug("basedir is %s", basedir.getAbsolutePath())
     execute("src/main/webapp")
 
 
+  }
+  static Pattern seperators = Pattern.compile("[ _]")
+
+  static String titleCase(final String string) {
+    if (string == null) {
+      return null
+    }
+    if (string.length() == 0) {
+      return string
+    }
+    final StringBuilder buffer = new StringBuilder(string.length())
+    final String[] tokens = seperators.split(string.toLowerCase())
+    boolean firstToken = true
+    for (final String token : tokens) {
+      if (firstToken) {
+        firstToken = false
+      } else {
+        buffer.append(' ')
+      }
+      buffer.append(token.length() == 0 ? token : Character.toTitleCase(token.charAt(0)))
+      if (token.length() > 1) {
+        buffer.append(token.substring(1))
+      }
+    }
+    return buffer.toString()
+  }
+
+  static String decamel(final String arg) {
+    if (arg == null || arg.length() == 0) {
+      return arg
+    }
+    final StringBuilder buffer = new StringBuilder(arg.length())
+    for (int i = 0; i < arg.length(); i++) {
+      final char c = arg.charAt(i)
+      if (i == 0) {
+        buffer.append(Character.toUpperCase(c))
+      } else if (Character.isUpperCase(c)) {
+        buffer.append(' ')
+        buffer.append(c)
+      } else {
+        buffer.append(c)
+      }
+    }
+    return buffer.toString()
   }
 
   def execute(String path, boolean preparsed = false) {
@@ -329,7 +374,7 @@ class LutraTask extends DefaultTask {
       final String id = variables.get(variable)
       if (ids.length() > 0)
         ids.append(",\n\t\t")
-      final String enumValue = StringFun.decamel(variable).toUpperCase().replaceAll(' ', '_')
+      final String enumValue = decamel(variable).toUpperCase().replaceAll(' ', '_')
       ids.append(enumValue)
       final Element element = map.get(id)
       final String location = element.getLocation().toString()
@@ -341,7 +386,7 @@ class LutraTask extends DefaultTask {
           element.getClass().getSimpleName(),
           variable,
           element.@elementType,
-          StringFun.titleCase(element.@elementType.toString()),
+          titleCase(element.@elementType.toString()),
           choppedLocation,
           DATE_FORMAT.format(now),
           element.escapeAbbreviated()))
