@@ -313,7 +313,10 @@ public abstract class Element {
 				.filter(predicate)
 				.map(InstanceListener::new).forEach(listeners::add);
 			copy = copyWithListeners(listeners);
-			listeners.stream().map(InstanceListener::getClone).forEach(functor);
+			listeners.stream()
+				.map(InstanceListener::getClone)
+				.filter(Objects::nonNull)
+				.forEach(functor);
 			return copy;
 		}
 		return copy;
