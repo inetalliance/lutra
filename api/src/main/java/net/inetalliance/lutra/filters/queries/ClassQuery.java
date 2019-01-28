@@ -10,8 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
-import static net.inetalliance.lutra.elements.DlElement.*;
-
 public abstract class ClassQuery<T>
 	implements Predicate<Element> {
 
@@ -50,11 +48,13 @@ public abstract class ClassQuery<T>
 	}
 
 	public T query(final Element root) {
-		for (final Element element : filter(getIterable(root))) {
-			for (final String cssClass : element.getClasses()) {
-				final Matcher matcher = pattern.matcher(cssClass);
-				if (matcher.find()) {
-					return fromString(matcher.group(1));
+		for (final Element e : getIterable(root)) {
+			if (test(e)) {
+				for (final String cssClass : e.getClasses()) {
+					final Matcher matcher = pattern.matcher(cssClass);
+					if (matcher.find()) {
+						return fromString(matcher.group(1));
+					}
 				}
 			}
 		}
