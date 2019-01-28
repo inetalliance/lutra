@@ -172,10 +172,10 @@ public class Pagination {
 	}
 
 	public static Map<String, List<String>> parseParameters(final String queryString) {
-		if (queryString == null || queryString.length() == 0) {
-			return Map.of();
-		}
 		final Map<String, List<String>> params = new HashMap<>();
+		if (queryString == null || queryString.length() == 0) {
+			return params;
+		}
 		int index = 0;
 		while (index < queryString.length()) {
 			final int equalsIndex = queryString.indexOf((int) '=', index);
