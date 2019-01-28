@@ -26,6 +26,7 @@ import java.util.stream.StreamSupport;
 import static java.util.Arrays.*;
 import static java.util.Optional.ofNullable;
 import static java.util.regex.Pattern.*;
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Stream.of;
 import static net.inetalliance.lutra.elements.Attribute.*;
 
@@ -303,10 +304,14 @@ public abstract class Element {
 		if (elementsToRemove.length == 0) {
 			// if none specified, check all descendants
 			copy = copyWithListeners(List.of());
-			StreamSupport.stream(copy.getTree().spliterator(), false).filter(predicate).forEach(functor);
+			StreamSupport.stream(copy.getTree().spliterator(), false)
+				.filter(predicate).collect(toList()).forEach(functor);
 		} else {
 			final Collection<InstanceListener> listeners = new ArrayList<>(elementsToRemove.length);
-			of(elementsToRemove).filter(predicate).map(InstanceListener::new).forEach(listeners::add);
+			of(elementsToRemove)
+				.filter(Objects::nonNull)
+				.filter(predicate)
+				.map(InstanceListener::new).forEach(listeners::add);
 			copy = copyWithListeners(listeners);
 			listeners.stream().map(InstanceListener::getClone).forEach(functor);
 			return copy;
