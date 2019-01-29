@@ -21,6 +21,7 @@ gradlePlugin {
     create("lutraPlugin") {
       id = "net.inetalliance.lutra"
       displayName = "Lutra XHTML to Java Generator"
+      description = "genrates java classes to represent valid xhtml documents"
       implementationClass = "net.inetalliance.lutra.LutraPlugin"
     }
   }
