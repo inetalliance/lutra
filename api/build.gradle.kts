@@ -13,14 +13,25 @@ dependencies {
 apply(plugin = "maven-publish")
 apply(plugin = "signing")
 
-tasks.register<Jar>("sourcesJar") {
-    from(sourceSets.main.get().allJava)
-    archiveClassifier.set("sources")
-}
+tasks {
+    register<Jar>("sourcesJar") {
+        from(sourceSets.main.get().allJava)
+        archiveBaseName.set("lutra")
+        archiveClassifier.set("sources")
+    }
 
-tasks.register<Jar>("javadocJar") {
-    from(tasks.javadoc)
-    archiveClassifier.set("javadoc")
+    register<Jar>("javadocJar") {
+        from(javadoc)
+        archiveBaseName.set("lutra")
+        archiveClassifier.set("javadoc")
+    }
+    jar {
+        archiveBaseName.set("lutra")
+    }
+    build {
+        dependsOn("sourcesJar")
+        dependsOn("javadocJar")
+    }
 }
 
 publishing {
