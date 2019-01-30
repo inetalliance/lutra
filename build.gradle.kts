@@ -2,7 +2,6 @@ plugins {
     java
     idea
 }
-
 subprojects {
     apply(plugin = "java")
     java {
@@ -13,16 +12,6 @@ subprojects {
         options.compilerArgs.add("-Werror")
         options.compilerArgs.add("-Xlint")
     }
-    tasks {
-        val sourcesJar by creating(Jar::class) {
-            archiveClassifier.set("sources")
-            from(sourceSets.main.get().allSource)
-        }
-        artifacts {
-            add("archives", sourcesJar)
-        }
-    }
-    apply(plugin = "maven")
     apply(plugin = "idea")
     idea {
         module {
@@ -33,8 +22,10 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-
     }
+
+
+
     group = "net.inetalliance.lutra"
     version = "1.1"
 }

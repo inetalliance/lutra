@@ -7,7 +7,7 @@ import net.inetalliance.lutra.rules.MayHaveAttribute;
 import java.util.EnumSet;
 
 /**
- * The <embed> element is not officially part of the XHTML Strick Specification, but its usage is so widespread
+ * The embed element is not officially part of the XHTML Strict Specification, but its usage is so widespread
  * that it
  * has been included in lutra.
  */
