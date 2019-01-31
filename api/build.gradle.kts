@@ -1,4 +1,5 @@
 description = "library to generate java classes from XHTML"
+version = "1.1.1"
 plugins {
     `maven-publish`
     signing
@@ -57,6 +58,11 @@ publishing {
                         id.set("mquinnv")
                         name.set("Michael Ventura")
                         email.set("michael.ventura@gmail.com")
+                    }
+                    developer {
+                        id.set("erikras")
+                        name.set("Erik Rasmussen")
+                        email.set("erik.rasmussen@inetalliance.net")
                     }
                 }
                 scm {
