@@ -1,4 +1,5 @@
 group = "net.inetalliance.lutra"
+version = "1.1.1"
 plugins {
   groovy
   idea
@@ -7,7 +8,7 @@ plugins {
 }
 
 dependencies {
-  compile(project(":api"))
+  compile("net.inetalliance:lutra:1.1")
   testCompile("junit:junit:4.8.2")
 }
 pluginBundle {
