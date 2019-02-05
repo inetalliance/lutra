@@ -1,5 +1,4 @@
 group = "net.inetalliance.lutra"
-version = "1.1.1"
 plugins {
   groovy
   idea

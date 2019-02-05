@@ -1,5 +1,4 @@
 description = "library to generate java classes from XHTML"
-version = "1.1.1"
 plugins {
     `maven-publish`
     signing
