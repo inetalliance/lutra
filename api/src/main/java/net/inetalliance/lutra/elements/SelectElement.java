@@ -50,7 +50,7 @@ public class SelectElement
 	}
 
 	public final <E extends Enum<E>> void addOptions(final Class<E> type, final Function<? super E, String> namePlucker) {
-		addOptions(type, (Collection<E>) null, namePlucker);
+		addOptions(type, EnumSet.allOf(type), namePlucker);
 	}
 
 	public final <E extends Enum<E>> void addOptions(final Class<E> type, final Collection<E> values,
