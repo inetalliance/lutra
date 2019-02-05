@@ -1,4 +1,5 @@
 description = "library to generate java classes from XHTML"
+group = "net.inetalliance"
 plugins {
     maven
     `maven-publish`
