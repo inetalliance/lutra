@@ -28,6 +28,7 @@ import static java.util.regex.Pattern.*;
 import static java.util.stream.Collectors.*;
 import static java.util.stream.Stream.*;
 import static net.inetalliance.lutra.elements.Attribute.*;
+import java.util.*;
 
 public abstract class Element {
   public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
@@ -165,7 +166,7 @@ public abstract class Element {
   private static Pattern _Capital = compile("_+(\\w)");
 
   static <E extends Enum<E>> String enumToCamelCase(final Enum<E> arg) {
-    return ofNullable(arg)
+    return Optional.ofNullable(arg)
       .map(Enum::name)
       .map(String::toLowerCase)
       .map(s -> _Capital.matcher(s).replaceAll(match -> match.group(1).toUpperCase()))
