@@ -953,9 +953,7 @@ public abstract class Element {
 
   public void prefixIdAttribute(final String prefix) {
     final String id = getId();
-    if (id != null) {
-      setId(prefix + Character.toUpperCase(id.charAt(0)) + id.substring(1));
-    }
+    setId(prefix + Character.toUpperCase(id.charAt(0)) + id.substring(1));
   }
 
   public final String getId() {
