@@ -102,6 +102,12 @@ public enum ElementType {
 			return new CaptionElement();
 		}
 	},
+	CIRCLE {
+		@Override
+		public Element create() {
+			return new CircleElement();
+		}
+	},
 	CITE {
 		@Override
 		public Element create() {
@@ -312,6 +318,12 @@ public enum ElementType {
 			return new KbdElement();
 		}
 	},
+	MAIN {
+		@Override
+		public Element create() {
+			return new MainElement();
+		}
+	},
 	MAP {
 		@Override
 		public Element create() {
@@ -372,6 +384,12 @@ public enum ElementType {
 			return new ParamElement();
 		}
 	},
+	PATH {
+		@Override
+		public Element create() {
+			return new PathElement();
+		}
+	},
 	PRE {
 		@Override
 		public Element create() {
@@ -382,6 +400,12 @@ public enum ElementType {
 		@Override
 		public Element create() {
 			return new QElement();
+		}
+	},
+	RECT {
+		@Override
+		public Element create() {
+			return new RectElement();
 		}
 	},
 	SAMP {
@@ -444,6 +468,12 @@ public enum ElementType {
 			return new SupElement();
 		}
 	},
+	SVG {
+		@Override
+		public Element create() {
+			return new SvgElement();
+		}
+	},
 	TABLE {
 		@Override
 		public Element create() {
@@ -460,6 +490,12 @@ public enum ElementType {
 		@Override
 		public Element create() {
 			return new TdElement();
+		}
+	},
+	TEXT {
+		@Override
+		public Element create() {
+			return new TextElement();
 		}
 	},
 	TEXTAREA {
