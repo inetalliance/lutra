@@ -27,6 +27,6 @@ subprojects {
 
 
     group = "net.inetalliance.lutra"
-    version = "1.1.2"
+    version = "1.2.0"
 }
 

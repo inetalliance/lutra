@@ -36,6 +36,18 @@ public enum ElementType {
 			return new AreaElement();
 		}
 	},
+	ARTICLE {
+		@Override
+		public Element create() {
+			return new ArticleElement();
+		}
+	},
+	ASIDE {
+		@Override
+		public Element create() {
+			return new AsideElement();
+		}
+	},
 	B {
 		@Override
 		public Element create() {
@@ -168,10 +180,22 @@ public enum ElementType {
 			return new FieldsetElement();
 		}
 	},
+	FOOTER {
+		@Override
+		public Element create() {
+			return new FooterElement();
+		}
+	},
 	FORM {
 		@Override
 		public Element create() {
 			return new FormElement();
+		}
+	},
+	HEADER {
+		@Override
+		public Element create() {
+			return new HeaderElement();
 		}
 	},
 	H1 {
@@ -300,6 +324,12 @@ public enum ElementType {
 			return new MetaElement();
 		}
 	},
+	NAV {
+		@Override
+		public Element create() {
+			return new NavElement();
+		}
+	},
 	NOSCRIPT {
 		@Override
 		public Element create() {
@@ -364,6 +394,12 @@ public enum ElementType {
 		@Override
 		public Element create() {
 			return new ScriptElement();
+		}
+	},
+	SECTION {
+		@Override
+		public Element create() {
+			return new SectionElement();
 		}
 	},
 	SELECT {
@@ -501,8 +537,10 @@ public enum ElementType {
 			EM, I, IMG, INS, INPUT, LABEL, MAP, OBJECT, KBD, Q, SAMP, SCRIPT,
 			SELECT, SMALL, SPAN, STRONG, SUB, SUP, TEXTAREA, TT, VAR);
 	public static final EnumSet<ElementType> BLOCK_AND_INLINE_ELEMENTS = union(blockElements, inlineElements);
-	public static final EnumSet<ElementType> BLOCK_AND_INLINE_AND_TEXT_ELEMENTS = union(blockElements, inlineElements, EnumSet.of(TEXTCONTENT));
-	public static final EnumSet<ElementType> INLINE_AND_TEXT_ELEMENTS = union(inlineElements, EnumSet.of(TEXTCONTENT));
+	public static final EnumSet<ElementType> BLOCK_AND_INLINE_AND_TEXT_ELEMENTS = union(blockElements,
+		inlineElements, EnumSet.of(TEXTCONTENT));
+	public static final EnumSet<ElementType> INLINE_AND_TEXT_ELEMENTS = union(inlineElements,
+		EnumSet.of(TEXTCONTENT));
 
 	private static final Map<String, ElementType> fromName;
 
@@ -532,15 +570,17 @@ public enum ElementType {
 	@SafeVarargs
 	public static EnumSet<ElementType> union(final EnumSet<ElementType> first, final EnumSet<ElementType>... rest) {
 		final EnumSet<ElementType> union = EnumSet.copyOf(first);
-		for (final EnumSet<ElementType> set : rest)
+		for (final EnumSet<ElementType> set : rest) {
 			union.addAll(set);
+		}
 		return union;
 	}
 
 	static {
 		fromName = new HashMap<>(values().length);
-		for (final ElementType type : values())
+		for (final ElementType type : values()) {
 			fromName.put(type.name, type);
+		}
 	}
 
 	public static ElementType fromName(final String name) {
@@ -550,8 +590,9 @@ public enum ElementType {
 	public static CharSequence toCommaDelimitedList(final ElementType... types) {
 		final StringBuilder list = new StringBuilder(256);
 		for (final ElementType type : types) {
-			if (list.length() > 0)
+			if (list.length() > 0) {
 				list.append(", ");
+			}
 			list.append(type);
 		}
 		return list;
