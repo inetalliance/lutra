@@ -15,8 +15,7 @@ public class FormElement extends CommonAbstractElement<FormElement> implements B
 	private static final AttributeRule[] attributeRules =
 			{
 					new MayHaveAttribute(Attribute.union(Attribute.COMMON,
-					                                     EnumSet.of(Attribute.ACTION, Attribute.METHOD, Attribute.ACCEPT, Attribute.ACCEPT_CHARSETS,
-					                                                Attribute.ENCTYPE, Attribute.ONRESET, Attribute.ONSUBMIT)))
+					                                     EnumSet.of(Attribute.ACTION, Attribute.METHOD, Attribute.ACCEPT, Attribute.ACCEPT_CHARSETS, Attribute.ENCTYPE, Attribute.ONRESET, Attribute.ONSUBMIT, Attribute.NOVALIDATE)))
 			};
 
 	public FormElement(final FormElementChild... children)
