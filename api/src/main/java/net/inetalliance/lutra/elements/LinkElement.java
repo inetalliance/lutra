@@ -98,12 +98,6 @@ public class LinkElement
 		return this;
 	}
 
-	@Override
-	public LinkElement setText(final String text) {
-		setTextContent(text);
-		return this;
-	}
-
 	public final LinkElement setType(final String value) {
 		setAttribute(Attribute.TYPE, value);
 		return this;
