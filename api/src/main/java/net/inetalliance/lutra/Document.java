@@ -38,7 +38,7 @@ public interface Document {
 				new ScriptElement().addChild(new TextContent(String.format(PROTOTYPE_DOM_LOADED, javascript))));
 		}
 
-		private static final String JQUERY_DOM_LOADED = "jQuery(document).ready(function(){%s});";
+		private static final String JQUERY_DOM_LOADED = "$(document).ready(function(){%s});";
 
 		public static void addJqueryOnLoad(final Document document, final CharSequence javascript) {
 			document.getHead().addChild(
