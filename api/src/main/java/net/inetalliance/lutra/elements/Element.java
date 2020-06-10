@@ -43,6 +43,7 @@ public abstract class Element {
   private static Pattern cssPixels = compile("([0-9]+)px");
   public final ElementType elementType;
   private final Map<Attribute, String> attributes;
+  private final Map<String, String> customAttributes;
   private final ChildRule[] childRules;
   private final AttributeRule[] attributeRules;
   private final List<Element> children;
@@ -61,6 +62,7 @@ public abstract class Element {
     this.childRules = childRules;
     this.attributeRules = attributeRules;
     attributes = new EnumMap<>(Attribute.class);
+    customAttributes = new HashMap<>();
     this.children = new ArrayList<>(children.length);
     for (final Child child : children) {
       addChild((Element) child);
@@ -91,6 +93,15 @@ public abstract class Element {
   private static void outputAttribute(final Appendable output, final Attribute key,
                                       final String attributeValue)
     throws IOException {
+    final String trimmedValue = attributeValue.trim();
+    output.append(' ').append(key.toString()).append("=\"");
+    final String escaped = Escaper.html40.escape(trimmedValue);
+    output.append(escaped.replaceAll("&amp;", "&"));  // stupid google thing [BJX-87]
+    output.append('"');
+  }
+  private static void outputAttribute(final Appendable output, final String key,
+                                      final String attributeValue)
+          throws IOException {
     final String trimmedValue = attributeValue.trim();
     output.append(' ').append(key.toString()).append("=\"");
     final String escaped = Escaper.html40.escape(trimmedValue);
@@ -188,6 +199,11 @@ public abstract class Element {
     removeClass(TOOLTIPPED);
   }
 
+
+  protected void removeAttribute(final String attribute) {
+    customAttributes.remove(attribute);
+  }
+
   protected void removeAttribute(final Attribute attribute) {
     attributes.remove(attribute);
   }
@@ -221,8 +237,21 @@ public abstract class Element {
     return this;
   }
 
+  public String getAttribute(final String attribute) {
+    return customAttributes.get(attribute);
+  }
+
   public String getAttribute(final Attribute attribute) {
     return attributes.get(attribute);
+  }
+
+  public Element setAttribute(final String attribute, final String value) {
+    if(value == null) {
+      customAttributes.remove(attribute);
+    } else {
+      customAttributes.put(attribute, value);
+    }
+    return this;
   }
 
   public Element setAttribute(final Attribute attribute, final String value) {
@@ -343,6 +372,7 @@ public abstract class Element {
   public Element copyWithListeners(final Iterable<? extends CloneListener> listeners) {
     final Element clone = elementType.create();
     clone.attributes.putAll(attributes);
+    clone.customAttributes.putAll(customAttributes);
     for (final Element child : children) {
       clone.addChild(child.copyWithListeners(listeners));
     }
@@ -412,6 +442,15 @@ public abstract class Element {
     final StringBuilder output = new StringBuilder(32);
     output.append('<').append(elementType);
     for (final Map.Entry<Attribute, String> entry : attributes.entrySet()) {
+      final String attributeValue = entry.getValue();
+      final String trimmedValue = attributeValue.trim();
+      if (trimmedValue != null) {
+        output.append(' ').append(entry.getKey()).append("=\"");
+        output.append(Escaper.html40.escape(trimmedValue));
+        output.append('"');
+      }
+    }
+    for (final Map.Entry<String, String> entry : customAttributes.entrySet()) {
       final String attributeValue = entry.getValue();
       final String trimmedValue = attributeValue.trim();
       if (trimmedValue != null) {
@@ -695,6 +734,12 @@ public abstract class Element {
     child.location = null;
   }
 
+  public Element removeAttribute(final String... attributes) {
+    for (final var attribute : attributes) {
+      this.customAttributes.remove(attribute);
+    }
+    return this;
+  }
   public Element removeAttribute(final Attribute... attributes) {
     for (final Attribute attribute : attributes) {
       this.attributes.remove(attribute);
@@ -849,6 +894,10 @@ public abstract class Element {
       javascript.append("node.setAttribute('").append(entry.getKey().name).append("','").append(
         entry.getValue()).append("');\n");
     }
+    for (final Map.Entry<String, String> entry : customAttributes.entrySet()) {
+      javascript.append("node.setAttribute('").append(entry.getKey()).append("','").append(
+              entry.getValue()).append("');\n");
+    }
     for (final Element child : children) {
       javascript.append("node.appendChild(");
       child.toJavascriptFunction(javascript);
@@ -890,6 +939,15 @@ public abstract class Element {
           throw new RuntimeException(e);
         }
       });
+    customAttributes.entrySet().stream().forEach(
+            entry -> {
+              try {
+                outputAttribute(output, entry.getKey(),entry.getValue());
+              } catch (IOException e) {
+                throw new RuntimeException(e);
+              }
+            }
+    );
     if (data != null) {
       for (Map.Entry<String, Object> entry : data.entrySet()) {
         if (entry.getKey().startsWith("data-")) {
