@@ -32,7 +32,6 @@ public class HtmlElement
 
 	public HtmlElement(final HtmlElementChild... children) {
 		super(ElementType.HTML, childRules, attributeRules, children);
-		setAttribute(XMLNS, "http://www.w3.org/1999/xhtml");
 	}
 
 	@Override
