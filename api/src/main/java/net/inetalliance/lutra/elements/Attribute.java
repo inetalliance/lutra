@@ -108,7 +108,8 @@ public enum Attribute {
 	AUTOCORRECT,
 	SPELLCHECK,
 	REQUIRED,
-	NOVALIDATE;
+	NOVALIDATE,
+	PATTERN;
 
 	public static final EnumSet<Attribute> COMMON =
 		EnumSet.of(ID, CLASS, TITLE, STYLE, ONCLICK, ONDBLCLICK, ONMOUSEDOWN, ONMOUSEUP,
