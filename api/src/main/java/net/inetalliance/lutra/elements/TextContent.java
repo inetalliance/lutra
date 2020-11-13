@@ -25,6 +25,7 @@ public class TextContent
 		BigElementChild,
 		ButtonElementChild,
 		CaptionElementChild,
+		CanvasElementChild,
 		CiteElementChild,
 		CodeElementChild,
 		DdElementChild,

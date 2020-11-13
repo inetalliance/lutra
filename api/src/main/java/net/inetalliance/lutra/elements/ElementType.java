@@ -96,6 +96,12 @@ public enum ElementType {
 			return new ButtonElement();
 		}
 	},
+	CANVAS {
+		@Override
+		public Element create() {
+			return new CanvasElement();
+		}
+	},
 	CAPTION {
 		@Override
 		public Element create() {
