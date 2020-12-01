@@ -20,8 +20,8 @@ public class VideoElement
                     new MayHaveAttribute(Attribute.union(Attribute.COMMON,
                             EnumSet.of(Attribute.SRC, Attribute.WIDTH, Attribute.HEIGHT,
                                     Attribute.CONTROLS, Attribute.BUFFERED, Attribute.CROSSORIGIN, Attribute.CURRENTTIME,
-                                    Attribute.LOOP, Attribute.POSTER, Attribute.PLAYSINLINE, Attribute.MUTED, Attribute.PRELOAD,
-                                    Attribute.TYPE)))
+                                    Attribute.AUTOPLAY, Attribute.LOOP, Attribute.POSTER, Attribute.PLAYSINLINE,
+                                    Attribute.MUTED, Attribute.PRELOAD, Attribute.TYPE)))
             };
 
     @Override
