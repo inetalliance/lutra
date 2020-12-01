@@ -564,6 +564,12 @@ public enum ElementType {
 			return new VarElement();
 		}
 	},
+	VIDEO {
+		@Override
+		public Element create() {
+			return new VideoElement();
+		}
+	},
 	AUDIO {
 		@Override
 		public Element create() {
