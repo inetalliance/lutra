@@ -192,6 +192,12 @@ public enum ElementType {
 			return new FieldsetElement();
 		}
 	},
+	FIGURE {
+		@Override
+		public Element create() {
+			return new FigureElement();
+		}
+	},
 	FOOTER {
 		@Override
 		public Element create() {
