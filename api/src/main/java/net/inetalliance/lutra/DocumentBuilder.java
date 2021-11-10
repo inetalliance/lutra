@@ -160,7 +160,7 @@ public class DocumentBuilder
 			final String attributeValue = attributes.getValue(i);
 			final Attribute attribute = Attribute.fromName(attributeName);
 			if (attribute == null) {
-				if (attributeName.startsWith("data-")) {
+				if (Element.metaAttributes.matcher(attributeName).find()) {
 					element.put(attributeName, attributeValue);
 				}
 				continue;

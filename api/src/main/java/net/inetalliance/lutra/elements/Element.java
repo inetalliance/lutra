@@ -51,6 +51,7 @@ public abstract class Element {
   private DocumentLocation location;
   private Map<String, Object> data;
   private HashMap<String, Method> dataCloneMethods;
+  public static Pattern metaAttributes = Pattern.compile("^(data|aria)-");
 
   protected Element(final ElementType elementType, final ChildRule[] childRules,
                     final AttributeRule[] attributeRules,
@@ -103,7 +104,7 @@ public abstract class Element {
                                       final String attributeValue)
           throws IOException {
     final String trimmedValue = attributeValue.trim();
-    output.append(' ').append(key.toString()).append("=\"");
+    output.append(' ').append(key).append("=\"");
     final String escaped = Escaper.html40.escape(trimmedValue);
     output.append(escaped.replaceAll("&amp;", "&"));  // stupid google thing [BJX-87]
     output.append('"');
@@ -948,9 +949,10 @@ public abstract class Element {
               }
             }
     );
+
     if (data != null) {
       for (Map.Entry<String, Object> entry : data.entrySet()) {
-        if (entry.getKey().startsWith("data-")) {
+        if (metaAttributes.matcher(entry.getKey()).find()) {
           output.append(' ').append(entry.getKey()).append('=').append('"').append(
             entry.getValue().toString()).append('"');
         }
