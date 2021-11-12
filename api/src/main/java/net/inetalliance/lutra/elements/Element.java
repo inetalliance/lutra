@@ -48,7 +48,7 @@ public abstract class Element {
   private DocumentLocation location;
   private Map<String, Object> data;
   private HashMap<String, Method> dataCloneMethods;
-  public static Pattern metaAttributes = Pattern.compile("^(data|aria)-");
+  public static Pattern metaAttributes = Pattern.compile("^(((data|aria)-)|role)");
 
   protected Element(final ElementType elementType, final ChildRule[] childRules,
                     final AttributeRule[] attributeRules,
