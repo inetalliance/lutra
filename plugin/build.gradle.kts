@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-  compile("net.inetalliance:lutra:1.3.6")
+  compile("net.inetalliance:lutra:1.4.0")
   testCompile("junit:junit:4.8.2")
 }
 pluginBundle {

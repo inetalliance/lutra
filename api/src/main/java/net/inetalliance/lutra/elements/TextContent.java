@@ -73,7 +73,7 @@ public class TextContent
 		TtElementChild,
 		VarElementChild {
 
-	private final String content;
+	protected final String content;
 
 	public TextContent(final String content) {
 		super(ElementType.TEXTCONTENT, ChildRule.NONE, AttributeRule.NONE);

@@ -186,6 +186,12 @@ public enum ElementType {
 			return new EmbedElement();
 		}
 	},
+	ENTITY {
+		@Override
+		public Element create() {
+			return new Entity("");
+		}
+	},
 	FIELDSET {
 		@Override
 		public Element create() {

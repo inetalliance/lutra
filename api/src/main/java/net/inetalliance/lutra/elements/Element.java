@@ -12,23 +12,20 @@ import net.inetalliance.lutra.util.Escaper;
 import net.inetalliance.lutra.util.LutraDebugger;
 import org.xml.sax.SAXException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
-import static java.util.Arrays.*;
-import static java.util.Optional.*;
-import static java.util.regex.Pattern.*;
-import static java.util.stream.Collectors.*;
-import static java.util.stream.Stream.*;
+import static java.util.Arrays.asList;
+import static java.util.regex.Pattern.compile;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.of;
 import static net.inetalliance.lutra.elements.Attribute.*;
-import java.util.*;
 
 public abstract class Element {
   public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -830,17 +827,7 @@ public abstract class Element {
     xml.append(src);
     xml.append("</span>");
     final DocumentBuilder builder = new DocumentBuilder(null);
-    builder.load(new ByteArrayInputStream(xml.toString().getBytes()));
-    final List<Element> children = builder.getRoot().getChildren();
-    if (LutraDebugger.isEnabled()) {
-      final DocumentLocation location = DocumentLocation.fromStack();
-      if (location != null) {
-        for (final Element child : children) {
-          child.location = location;
-        }
-      }
-    }
-    addChild(children);
+    addChild(builder.load(src));
   }
 
   public List<Element> getChildren() {

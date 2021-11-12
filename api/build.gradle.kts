@@ -9,6 +9,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
+    compile("org.jsoup:jsoup:1.14.3")
     testCompile("junit:junit:4.11")
 }
 
