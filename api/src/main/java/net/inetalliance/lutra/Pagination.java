@@ -169,11 +169,11 @@ public class Pagination {
 		}
 		for (final Element element : paginationElements) {
 			element.removeChildren();
-			nav.removeAttribute("aria-label");
-			var label = element.getAttribute("aria-label");
+			nav.put("aria-label",null );
+			var label = (String) element.get("aria-label");
 			if (label != null && label.length() > 0) {
-				nav.setAttribute("aria-label", label);
-				element.removeAttribute("aria-label");
+				nav.put("aria-label", label);
+				element.put("aria-label", null);
 			}
 			element.appendChild(nav.copy());
 		}
