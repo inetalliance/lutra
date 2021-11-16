@@ -26,7 +26,7 @@ tasks {
         dependsOn("javadocJar")
     }
     withType<Jar> {
-        archiveBaseName.set("lutra-api")
+        archiveBaseName.set("lutra")
     }
 }
 publishing {
@@ -35,8 +35,6 @@ publishing {
             artifactId = "lutra"
             groupId = "net.inetalliance"
             from(components["java"])
-            artifact(tasks["sourcesJar"])
-            artifact(tasks["javadocJar"])
             pom {
                 name.set(project.name)
                 description.set(project.description)
