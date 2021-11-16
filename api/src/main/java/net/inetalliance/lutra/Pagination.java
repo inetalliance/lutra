@@ -229,7 +229,7 @@ public class Pagination {
 		}
 		li = new LiElement(new AElement(new SpanElement(label)).setHref(createUrl(baseUrl, parameters)));
 		if (!addLink) {
-			li.addClass("current");
+			li.addClass("active");
 		}
 		li.addClass("page-item");
 		return li;
