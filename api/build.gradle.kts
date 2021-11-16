@@ -3,14 +3,16 @@ group = "net.inetalliance"
 plugins {
     `maven-publish`
     signing
+		`java-library`
 }
 repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("org.jsoup:jsoup:1.14.3")
+    api("org.jsoup:jsoup:1.14.3")
     testImplementation("junit:junit:4.13.2")
 }
+
 
 java {
     withJavadocJar()
