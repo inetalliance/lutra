@@ -23,14 +23,14 @@ public class Pagination {
 	private static final String PAGINATION_START_PARAMETER = "start";
 
 	public static int paginate(final int size, final LazyDocument page,
-		final Locale locale, final String originalRequestUrlWithQuery) {
+	                           final Locale locale, final String originalRequestUrlWithQuery) {
 		return paginate(size, page, locale, () -> page.byId.values().stream().filter(paginate).iterator(),
-			originalRequestUrlWithQuery);
+				originalRequestUrlWithQuery);
 	}
 
 	public static int paginate(final int size, final LazyDocument page,
-		final Locale locale, final Iterable<Element> paginationElements,
-		final String originalRequestUrlWithQuery) {
+	                           final Locale locale, final Iterable<Element> paginationElements,
+	                           final String originalRequestUrlWithQuery) {
 		if (!paginationElements.iterator().hasNext()) {
 			return 0;
 		}
@@ -41,18 +41,18 @@ public class Pagination {
 			}
 		}
 		throw new IllegalStateException(
-			String.format("Expecting element with css class to match \"%s\"", paginationPerPage.pattern.pattern()));
+				String.format("Expecting element with css class to match \"%s\"", paginationPerPage.pattern.pattern()));
 	}
 
 	public static <T> Collection<T> paginate(final Collection<T> collection, final LazyDocument page,
-		final Locale locale, final String originalRequestUrlWithQuery) {
+	                                         final Locale locale, final String originalRequestUrlWithQuery) {
 		return paginate(collection, page, locale, () -> page.byId.values().stream().filter(paginate).iterator(),
-			originalRequestUrlWithQuery);
+				originalRequestUrlWithQuery);
 	}
 
 	public static <T> Collection<T> paginate(final Collection<T> collection, final LazyDocument page,
-		final Locale locale, final Iterable<Element> paginationElements,
-		final String originalRequestUrlWithQuery) {
+	                                         final Locale locale, final Iterable<Element> paginationElements,
+	                                         final String originalRequestUrlWithQuery) {
 		if (!paginationElements.iterator().hasNext()) {
 			return collection;
 		}
@@ -63,28 +63,28 @@ public class Pagination {
 			}
 		}
 		throw new IllegalStateException(
-			String.format("Expecting element with css class to match \"%s\"", paginationPerPage.pattern.pattern()));
+				String.format("Expecting element with css class to match \"%s\"", paginationPerPage.pattern.pattern()));
 	}
 
 	public static int paginate(final int size, final LazyDocument page,
-		final Locale locale, final String originalRequestUrlWithQuery,
-		final int perPage) {
+	                           final Locale locale, final String originalRequestUrlWithQuery,
+	                           final int perPage) {
 		return paginate(size, page, locale, () -> page.byId.values().stream().filter(paginate).iterator(),
-			originalRequestUrlWithQuery, perPage);
+				originalRequestUrlWithQuery, perPage);
 	}
 
 	public static <T> Collection<T> paginate(final Collection<T> collection, final LazyDocument page,
-		final Locale locale, final String originalRequestUrlWithQuery,
-		final int perPage) {
+	                                         final Locale locale, final String originalRequestUrlWithQuery,
+	                                         final int perPage) {
 		return paginate(collection, page, locale, () -> page.byId.values().stream().filter(paginate).iterator(),
-			originalRequestUrlWithQuery, perPage);
+				originalRequestUrlWithQuery, perPage);
 	}
 
 	private static final int PAGINATION_DEFAULT_MAX_PAGES = 10;
 
 	public static <T> Collection<T> paginate(final Collection<T> collection, final LazyDocument page,
-		final Locale locale, final Iterable<Element> paginationElements,
-		final String originalRequestUrlWithQuery, final int perPage) {
+	                                         final Locale locale, final Iterable<Element> paginationElements,
+	                                         final String originalRequestUrlWithQuery, final int perPage) {
 		if (!paginationElements.iterator().hasNext()) {
 			return collection.stream().limit(perPage).collect(toList());
 		} else {
@@ -99,8 +99,8 @@ public class Pagination {
 	}
 
 	public static int paginate(final int size, final LazyDocument page,
-		final Locale locale, final Iterable<Element> paginationElements,
-		final String originalRequestUrlWithQuery, final int perPage) {
+	                           final Locale locale, final Iterable<Element> paginationElements,
+	                           final String originalRequestUrlWithQuery, final int perPage) {
 		if (size <= perPage) {
 			// don't need pagination
 			paginationElements.forEach(Element::remove);
@@ -119,17 +119,18 @@ public class Pagination {
 		}
 		final String baseUrl = stripParameters(originalRequestUrlWithQuery);
 		final Map<String, List<String>> parameters = parseParameters(
-			getQueryString(originalRequestUrlWithQuery));
+				getQueryString(originalRequestUrlWithQuery));
 		final String startParameter = parameters.getOrDefault(PAGINATION_START_PARAMETER, List.of())
-			.stream().findFirst().orElse(null);
+				.stream().findFirst().orElse(null);
 		final int start = startParameter == null ? 0 : Integer.parseInt(startParameter);
 		final int totalPages = (int) Math.ceil(size / (double) perPage);
 		final NavElement nav = new NavElement();
 		final UlElement ul = new UlElement();
+		ul.setClass("pagination");
 		nav.appendChild(ul);
 		if (start > 0) {
 			final Element previousLi = makePaginationLi(baseUrl, parameters, true, start - perPage,
-				String.format("Previous %d", perPage));
+					String.format("Previous %d", perPage));
 			previousLi.addClass("previous");
 			ul.appendChild(previousLi);
 		}
@@ -147,7 +148,7 @@ public class Pagination {
 		for (int i = firstPage; i < lastPage; i++) {
 			final int linkStartParam = i * perPage;
 			final Element li = makePaginationLi(baseUrl, parameters, linkStartParam != start, linkStartParam,
-				Integer.toString(i + 1));
+					Integer.toString(i + 1));
 			oddEven.mark(li);
 			ul.appendChild(li);
 		}
@@ -162,12 +163,18 @@ public class Pagination {
 		}
 		if (onNextPage > 0) {
 			final Element nextLi = makePaginationLi(baseUrl, parameters, true, start + perPage,
-				String.format("Next %d", onNextPage));
+					String.format("Next %d", onNextPage));
 			nextLi.addClass("next");
 			ul.appendChild(nextLi);
 		}
 		for (final Element element : paginationElements) {
 			element.removeChildren();
+			nav.removeAttribute("aria-label");
+			var label = element.getAttribute("aria-label");
+			if (label != null && label.length() > 0) {
+				nav.setAttribute("aria-label", label);
+				element.removeAttribute("aria-label");
+			}
 			element.appendChild(nav.copy());
 		}
 		return start;
@@ -213,17 +220,20 @@ public class Pagination {
 	}
 
 	private static Element makePaginationLi(final String baseUrl, final Map<String, List<String>> parameters,
-		final boolean addLink, final int linkStartParam, final String label) {
+	                                        final boolean addLink, final int linkStartParam, final String label) {
+		final LiElement li;
 		if (addLink) {
 			if (linkStartParam == 0) {
 				parameters.remove(PAGINATION_START_PARAMETER);
 			} else {
 				parameters.put(PAGINATION_START_PARAMETER, Collections.singletonList(Integer.toString(linkStartParam)));
 			}
-			return new LiElement(new AElement(new SpanElement(label)).setHref(createUrl(baseUrl, parameters)));
+			li = new LiElement(new AElement(new SpanElement(label)).setHref(createUrl(baseUrl, parameters)));
 		} else {
-			return new LiElement(label).setClass("current");
+			li = new LiElement(label).setClass("current");
 		}
+		li.addClass("page-item");
+		return li;
 	}
 
 	private static String createUrl(final String fullUrl, final Map<String, List<String>> parameters) {
@@ -244,7 +254,7 @@ public class Pagination {
 	}
 
 	private static void toQueryString(final StringBuilder buffer, final Map<String, List<String>> parameters,
-		boolean needAmpersand) {
+	                                  boolean needAmpersand) {
 		for (final Map.Entry<String, List<String>> entry : parameters.entrySet()) {
 			final String param = entry.getKey();
 			if (entry.getValue() != null) {
