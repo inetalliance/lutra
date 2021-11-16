@@ -222,15 +222,14 @@ public class Pagination {
 	private static Element makePaginationLi(final String baseUrl, final Map<String, List<String>> parameters,
 	                                        final boolean addLink, final int linkStartParam, final String label) {
 		final LiElement li;
-		if (addLink) {
-			if (linkStartParam == 0) {
-				parameters.remove(PAGINATION_START_PARAMETER);
-			} else {
-				parameters.put(PAGINATION_START_PARAMETER, Collections.singletonList(Integer.toString(linkStartParam)));
-			}
-			li = new LiElement(new AElement(new SpanElement(label)).setHref(createUrl(baseUrl, parameters)));
+		if (linkStartParam == 0) {
+			parameters.remove(PAGINATION_START_PARAMETER);
 		} else {
-			li = new LiElement(label).setClass("active");
+			parameters.put(PAGINATION_START_PARAMETER, Collections.singletonList(Integer.toString(linkStartParam)));
+		}
+		li = new LiElement(new AElement(new SpanElement(label)).setHref(createUrl(baseUrl, parameters)));
+		if (!addLink) {
+			li.addClass("current");
 		}
 		li.addClass("page-item");
 		return li;
