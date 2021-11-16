@@ -124,7 +124,9 @@ public class Pagination {
 			.stream().findFirst().orElse(null);
 		final int start = startParameter == null ? 0 : Integer.parseInt(startParameter);
 		final int totalPages = (int) Math.ceil(size / (double) perPage);
+		final NavElement nav = new NavElement();
 		final UlElement ul = new UlElement();
+		nav.appendChild(ul);
 		if (start > 0) {
 			final Element previousLi = makePaginationLi(baseUrl, parameters, true, start - perPage,
 				String.format("Previous %d", perPage));
@@ -166,7 +168,7 @@ public class Pagination {
 		}
 		for (final Element element : paginationElements) {
 			element.removeChildren();
-			element.appendChild(ul.copy());
+			element.appendChild(nav.copy());
 		}
 		return start;
 	}
