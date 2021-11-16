@@ -75,8 +75,9 @@ publishing {
         }
     }
 }
-
-signing {
-    sign(publishing.publications["lutra"])
+if(project.property("ossrhUsername") != null) {
+    signing {
+        sign(publishing.publications["lutra"])
+    }
 }
 
