@@ -8,6 +8,7 @@ subprojects {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     tasks.withType<JavaCompile> {
         options.compilerArgs.add("-Werror")
         options.compilerArgs.add("-Xlint")
@@ -25,6 +26,6 @@ subprojects {
     }
 
     group = "net.inetalliance.lutra"
-    version = "1.4.1"
+    version = "1.4.2"
 }
 

@@ -1,13 +1,12 @@
 package net.inetalliance.lutra;
 
 import net.inetalliance.lutra.elements.*;
+import net.inetalliance.lutra.elements.Attribute;
+import net.inetalliance.lutra.elements.Element;
 import net.inetalliance.lutra.listeners.DocumentParseListener;
 import net.inetalliance.lutra.rules.ValidationErrors;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Entities;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.*;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.NodeVisitor;
 import org.xml.sax.Locator;
@@ -212,6 +211,15 @@ public class DocumentBuilder implements ReloadableFile {
 	}
 
 
+	public void cdata(final String data) {
+		if (stack.isEmpty()) {
+			return;
+		}
+		final Element parent = stack.peek();
+		if (parent != null) {
+			parent.appendChild(new TextContent(data));
+		}
+	}
 	public void characters(String content) {
 		if (stack.isEmpty()) {
 			return;
@@ -263,6 +271,8 @@ public class DocumentBuilder implements ReloadableFile {
 			public void head(Node node, int depth) {
 				if(node instanceof org.jsoup.nodes.Document) {
 					startDocument();
+				} else if(node instanceof DataNode) {
+					cdata(((DataNode)node).getWholeData());
 				} else if(node instanceof TextNode) {
 					characters(((TextNode)node).getWholeText());
 				 } else if (node instanceof Comment) {

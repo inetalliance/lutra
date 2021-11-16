@@ -1,7 +1,6 @@
 description = "library to generate java classes from XHTML"
 group = "net.inetalliance"
 plugins {
-    maven
     `maven-publish`
     signing
 }
@@ -9,34 +8,27 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    compile("org.jsoup:jsoup:1.14.3")
-    testCompile("junit:junit:4.11")
+    implementation("org.jsoup:jsoup:1.14.3")
+    testImplementation("junit:junit:4.13.2")
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 apply(plugin = "maven-publish")
 apply(plugin = "signing")
 
-tasks {
-    register<Jar>("sourcesJar") {
-        from(sourceSets.main.get().allJava)
-        archiveBaseName.set("lutra")
-        archiveClassifier.set("sources")
-    }
 
-    register<Jar>("javadocJar") {
-        from(javadoc)
-        archiveBaseName.set("lutra")
-        archiveClassifier.set("javadoc")
-    }
-    jar {
-        archiveBaseName.set("lutra")
-    }
+tasks {
     build {
         dependsOn("sourcesJar")
         dependsOn("javadocJar")
     }
+    withType<Jar> {
+        archiveBaseName.set("lutra-api")
+    }
 }
-
 publishing {
     publications {
         create<MavenPublication>("lutra") {

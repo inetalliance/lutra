@@ -1,3 +1,5 @@
+import org.gradle.model.internal.core.ModelNodes.withType
+
 group = "net.inetalliance.lutra"
 plugins {
   groovy
@@ -7,8 +9,13 @@ plugins {
 }
 
 dependencies {
-  compile("net.inetalliance:lutra:1.4.1")
-  testCompile("junit:junit:4.8.2")
+  implementation("net.inetalliance:lutra:1.4.1")
+  testImplementation("junit:junit:4.8.2")
+}
+tasks {
+  withType<Jar> {
+    archiveBaseName.set("lutra-plugin")
+  }
 }
 pluginBundle {
   website = "https://github.com/inetalliance" 
