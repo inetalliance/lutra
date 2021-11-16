@@ -129,8 +129,8 @@ public class Pagination {
 		ul.setClass("pagination");
 		nav.appendChild(ul);
 		if (start > 0) {
-			final Element previousLi = makePaginationLi(baseUrl, parameters, true, start - perPage,
-					String.format("Previous %d", perPage));
+			final Element previousLi = makePaginationLi(baseUrl, parameters, start - perPage,
+					 String.format("Previous %d", perPage));
 			previousLi.addClass("previous");
 			ul.appendChild(previousLi);
 		}
@@ -148,7 +148,7 @@ public class Pagination {
 		for (int i = firstPage; i < lastPage; i++) {
 			final int linkStartParam = i * perPage;
 			final Element li = makePaginationLi(baseUrl, parameters, linkStartParam != start, linkStartParam,
-					Integer.toString(i + 1));
+					Integer.toString(i + 1), linkStartParam == start ? "Current Page" : "Page " + (i + 1));
 			oddEven.mark(li);
 			ul.appendChild(li);
 		}
@@ -156,20 +156,18 @@ public class Pagination {
 		final int onNextPage;
 		if (afterPage <= 0) {
 			onNextPage = 0;
-		} else if (afterPage > perPage) {
-			onNextPage = perPage;
 		} else {
-			onNextPage = afterPage;
+			onNextPage = Math.min(afterPage, perPage);
 		}
 		if (onNextPage > 0) {
-			final Element nextLi = makePaginationLi(baseUrl, parameters, true, start + perPage,
-					String.format("Next %d", onNextPage));
+			final Element nextLi = makePaginationLi(baseUrl, parameters, start + perPage,
+					 String.format("Next %d", onNextPage));
 			nextLi.addClass("next");
 			ul.appendChild(nextLi);
 		}
 		for (final Element element : paginationElements) {
 			element.removeChildren();
-			nav.put("aria-label",null );
+			nav.put("aria-label", null);
 			var label = (String) element.get("aria-label");
 			if (label != null && label.length() > 0) {
 				nav.put("aria-label", label);
@@ -187,12 +185,12 @@ public class Pagination {
 		}
 		int index = 0;
 		while (index < queryString.length()) {
-			final int equalsIndex = queryString.indexOf((int) '=', index);
+			final int equalsIndex = queryString.indexOf('=', index);
 			if (equalsIndex < 0) {
 				break;
 			}
 			final String key = URLDecoder.decode(queryString.substring(index, equalsIndex), StandardCharsets.UTF_8);
-			final int ampersandIndex = queryString.indexOf((int) '&', equalsIndex);
+			final int ampersandIndex = queryString.indexOf('&', equalsIndex);
 			final String value;
 			if (ampersandIndex < 0) {
 				value = URLDecoder.decode(queryString.substring(equalsIndex + 1), StandardCharsets.UTF_8);
@@ -220,18 +218,33 @@ public class Pagination {
 	}
 
 	private static Element makePaginationLi(final String baseUrl, final Map<String, List<String>> parameters,
-	                                        final boolean addLink, final int linkStartParam, final String label) {
-		final LiElement li;
+	                                        final int linkStartParam, final String label) {
+		return makePaginationLi(baseUrl,parameters, true,linkStartParam,label, null);
+	}
+	private static Element makePaginationLi(final String baseUrl, final Map<String, List<String>> parameters,
+	                                        final boolean addLink, final int linkStartParam, final String label,
+	                                        final String srOnly) {
 		if (linkStartParam == 0) {
 			parameters.remove(PAGINATION_START_PARAMETER);
 		} else {
 			parameters.put(PAGINATION_START_PARAMETER, Collections.singletonList(Integer.toString(linkStartParam)));
 		}
-		li = new LiElement(new AElement(new SpanElement(label)).setHref(createUrl(baseUrl, parameters)));
-		if (!addLink) {
+		var li = new LiElement().setClass("page-item");
+		var labelSpan = new SpanElement(label);
+		var srSpan = srOnly == null ? null : new SpanElement(srOnly).setClass("sr-only");
+		if(addLink) {
+			var a = new AElement(labelSpan);
+			li.appendChild(a.setHref(createUrl(baseUrl,parameters))) ;
+			if(srOnly != null) {
+				a.appendChild(srSpan);
+			}
+		} else {
 			li.addClass("active");
+			li.appendChild(labelSpan);
+			if(srOnly != null) {
+				li.appendChild(srSpan);
+			}
 		}
-		li.addClass("page-item");
 		return li;
 	}
 
