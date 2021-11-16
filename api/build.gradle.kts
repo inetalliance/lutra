@@ -17,12 +17,6 @@ java {
     withSourcesJar()
 }
 apply(plugin = "maven-publish")
-if (project.property("ossrhUsername") != null) {
-    signing {
-        sign(publishing.publications["lutra"])
-    }
-    apply(plugin = "signing")
-}
 tasks {
     build {
         dependsOn("sourcesJar")
@@ -77,5 +71,11 @@ publishing {
             }
         }
     }
+}
+if (project.hasProperty("ossrhUsername")) {
+    signing {
+        sign(publishing.publications["lutra"])
+    }
+    apply(plugin = "signing")
 }
 
