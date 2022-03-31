@@ -587,6 +587,10 @@ public enum ElementType {
 		public Element create() {
 			return new AudioElement();
 		}
+	},
+	LOTTIE_PLAYER {
+		@Override
+		public Element create() { return new LottiePlayerElement(); }
 	};
 
 	public static final EnumSet<ElementType> blockElements =
@@ -608,7 +612,7 @@ public enum ElementType {
 	public final Predicate<Element> predicate;
 
 	ElementType() {
-		name = name().toLowerCase();
+		name = name().toLowerCase().replace('_','-');
 		predicate = object -> object.elementType == ElementType.this;
 	}
 

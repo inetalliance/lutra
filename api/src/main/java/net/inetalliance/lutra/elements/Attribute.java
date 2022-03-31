@@ -29,6 +29,7 @@ public enum Attribute {
 	ONMOUSEOUT,
 	ONMOUSEOVER,
 	ONMOUSEUP,
+	MODE,
 	XMLNS,
 	XMLNS_FB("xmlns:fb"),
 	XML_LANG("xml:lang"),
