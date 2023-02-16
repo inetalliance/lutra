@@ -13,8 +13,9 @@
         <!ELEMENT callgrove-messages (#PCDATA)>
 <!ELEMENT integer (#PCDATA)>
 <!ELEMENT string (#PCDATA)>
+<!ELEMENT boolean (#PCDATA)>
 <!ELEMENT uri (#PCDATA)>
-<!ELEMENT settings (integer*,string*,uri*)>
+<!ELEMENT settings (integer*,string*,boolean*,uri*)>
 <!ELEMENT development (settings?, database?, memcache?, coordinator?, authenticator?,  listener*)>
 <!ELEMENT production (settings?, database?, memcache?, coordinator?,authenticator?, listener*)>
 <!ELEMENT listener (#PCDATA)>
@@ -34,6 +35,8 @@
 <!ATTLIST integer value CDATA #REQUIRED>
 <!ATTLIST string name CDATA #REQUIRED>
 <!ATTLIST string value CDATA #REQUIRED>
+<!ATTLIST boolean name CDATA #REQUIRED>
+<!ATTLIST boolean type (true|false) CDATA #REQUIRED>
 <!ATTLIST uri name CDATA #REQUIRED>
 <!ATTLIST uri value CDATA #REQUIRED>
 <!ATTLIST factory page-root CDATA #REQUIRED>
