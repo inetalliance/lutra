@@ -1,5 +1,3 @@
-import org.gradle.model.internal.core.ModelNodes.withType
-
 group = "net.inetalliance.lutra"
 plugins {
   groovy
@@ -9,8 +7,8 @@ plugins {
 }
 
 dependencies {
-  implementation("net.inetalliance:lutra:1.4.1")
-  testImplementation("junit:junit:4.8.2")
+  implementation("net.inetalliance:lutra:1.5.2")
+  testImplementation("junit:junit:4.13.1")
 }
 tasks {
   withType<Jar> {
@@ -18,9 +16,9 @@ tasks {
   }
 }
 pluginBundle {
-  website = "https://github.com/inetalliance" 
-  vcsUrl = "https://github.com/inetalliance/lutra" 
-  tags = listOf("xhtml", "java") 
+  website = "https://github.com/inetalliance"
+  vcsUrl = "https://github.com/inetalliance/lutra"
+  tags = listOf("xhtml", "java")
 }
 
 gradlePlugin {
@@ -33,5 +31,3 @@ gradlePlugin {
     }
   }
 }
-
-

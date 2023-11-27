@@ -5,8 +5,8 @@ plugins {
 subprojects {
     apply(plugin = "java")
     java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     tasks.withType<JavaCompile> {
@@ -26,5 +26,5 @@ subprojects {
     }
 
     group = "net.inetalliance.lutra"
-    version = "1.4.3"
+    version = "1.5.2"
 }
