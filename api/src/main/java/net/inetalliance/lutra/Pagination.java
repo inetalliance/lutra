@@ -98,6 +98,17 @@ public class Pagination {
 
 	}
 
+	private static Integer parseParam(final String param) {
+		if(param != null && !param.isEmpty()) {
+			try {
+				return Integer.parseInt(param);
+			} catch (NumberFormatException e) {
+				// this is here to stop problems when bots pass weird values
+			}
+		}
+		return 0;
+	}
+
 	public static int paginate(final int size, final LazyDocument page,
 	                           final Locale locale, final Iterable<Element> paginationElements,
 	                           final String originalRequestUrlWithQuery, final int perPage) {
@@ -122,7 +133,7 @@ public class Pagination {
 				getQueryString(originalRequestUrlWithQuery));
 		final String startParameter = parameters.getOrDefault(PAGINATION_START_PARAMETER, List.of())
 				.stream().findFirst().orElse(null);
-		final int start = startParameter == null ? 0 : Integer.parseInt(startParameter);
+		final int start = parseParam(startParameter);
 		final int totalPages = (int) Math.ceil(size / (double) perPage);
 		final NavElement nav = new NavElement();
 		final UlElement ul = new UlElement();
@@ -169,7 +180,7 @@ public class Pagination {
 			element.removeChildren();
 			nav.put("aria-label", null);
 			var label = (String) element.get("aria-label");
-			if (label != null && label.length() > 0) {
+			if (label != null && !label.isEmpty()) {
 				nav.put("aria-label", label);
 				element.put("aria-label", null);
 			}
@@ -180,7 +191,7 @@ public class Pagination {
 
 	public static Map<String, List<String>> parseParameters(final String queryString) {
 		final Map<String, List<String>> params = new HashMap<>();
-		if (queryString == null || queryString.length() == 0) {
+		if (queryString == null || queryString.isEmpty()) {
 			return params;
 		}
 		int index = 0;
