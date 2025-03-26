@@ -1,5 +1,7 @@
 package net.inetalliance.lutra.elements;
 
+import org.w3c.dom.html.HTMLFontElement;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -202,6 +204,12 @@ public enum ElementType {
 		@Override
 		public Element create() {
 			return new FigureElement();
+		}
+	},
+	FONT {
+		@Override
+		public Element create() {
+			return new FontElement();
 		}
 	},
 	FOOTER {

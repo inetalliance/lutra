@@ -36,6 +36,7 @@ public class TextContent
 		EmElementChild,
 		EmbedElementChild,
 		FooterElementChild,
+		FontElementChild,
 		FieldsetElementChild,
 		HeaderElementChild,
 		H1ElementChild,

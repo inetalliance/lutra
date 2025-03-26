@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-  implementation("net.inetalliance:lutra:1.5.2")
+  implementation("net.inetalliance:lutra:1.5.3")
   testImplementation("junit:junit:4.13.1")
 }
 tasks {
