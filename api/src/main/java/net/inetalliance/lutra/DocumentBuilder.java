@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@SuppressWarnings("this-escape")
 public class DocumentBuilder implements ReloadableFile {
 	private static final Collection<DocumentParseListener> parseListeners = new ArrayList<>(0);
 	private final Stack<Element> stack;
@@ -42,7 +43,8 @@ public class DocumentBuilder implements ReloadableFile {
 	}
 
 
-	private static String read(final String resource) {
+	@SuppressWarnings("unused")
+  private static String read(final String resource) {
 		InputStream resourceAsStream = DocumentBuilder.class.getResourceAsStream(resource);
 		if (resourceAsStream == null) {
 			throw new NullPointerException();
@@ -60,7 +62,8 @@ public class DocumentBuilder implements ReloadableFile {
 		}
 	}
 
-	public static void addParseListener(final DocumentParseListener listener) {
+	@SuppressWarnings("unused")
+  public static void addParseListener(final DocumentParseListener listener) {
 		parseListeners.add(listener);
 	}
 
@@ -130,10 +133,12 @@ public class DocumentBuilder implements ReloadableFile {
 		body = null;
 	}
 
-	public void endDocument() {
+	@SuppressWarnings("unused")
+  public void endDocument() {
 	}
 
-	static class EventLocator implements Locator {
+	@SuppressWarnings("unused")
+  static class EventLocator implements Locator {
 
 		private final Location l;
 
@@ -226,7 +231,7 @@ public class DocumentBuilder implements ReloadableFile {
 		}
 		final Element parent = stack.peek();
 		if (parent != null) {
-			if (content.trim().length() > 0) {
+			if (!content.trim().isEmpty()) {
 				final Element lastChild = parent.getLastChild();
 				if (lastChild instanceof TextContent) {
 					final String previousContent = lastChild.getText();
@@ -266,7 +271,8 @@ public class DocumentBuilder implements ReloadableFile {
 	}
 
 	public void load(final org.jsoup.nodes.Document doc) {
-		doc.traverse(new NodeVisitor() {
+    //noinspection NullableProblems
+    doc.traverse(new NodeVisitor() {
 			@Override
 			public void head(Node node, int depth) {
 				if(node instanceof org.jsoup.nodes.Document) {
@@ -303,7 +309,8 @@ public class DocumentBuilder implements ReloadableFile {
 		}
 	}
 
-	private void entity(EntityReference entity) {
+	@SuppressWarnings("unused")
+  private void entity(EntityReference entity) {
 		var parent = stack.peek();
 		if (parent != null) {
 			var e = new Entity(entity.getName());

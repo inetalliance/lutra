@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.*;
 import static java.util.stream.Collectors.*;
-
+@SuppressWarnings("this-escape")
 public class LinkElement
 	extends CommonAbstractElement<LinkElement>
 	implements HeadElementChild {

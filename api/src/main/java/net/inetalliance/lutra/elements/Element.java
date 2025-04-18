@@ -1,5 +1,6 @@
 package net.inetalliance.lutra.elements;
 
+import lombok.Setter;
 import net.inetalliance.lutra.DocumentBuilder;
 import net.inetalliance.lutra.listeners.CloneListener;
 import net.inetalliance.lutra.listeners.InstanceListener;
@@ -21,23 +22,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
+import static java.lang.System.err;
 import static java.util.Arrays.asList;
 import static java.util.regex.Pattern.compile;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.of;
 import static net.inetalliance.lutra.elements.Attribute.*;
 
+@SuppressWarnings("this-escape")
 public abstract class Element {
   public static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
   public static final Pattern SAX_ENTITY_ERROR =
-    compile(".*\".+\" was referenced, but not declared.*");
+      compile(".*\".+\" was referenced, but not declared.*");
   protected static final String[] NO_CLASSES = new String[0];
   private static final String EDITABLE_IN_PLACE = "editable-in-place";
   private static final Pattern STYLE_DELIMITERS = compile("[:;]");
   private static final String TOOLTIPPED = "tooltipped";
   private static final Pattern EDIT_IN_PLACE_CLASS_PATTERN = compile("eip_.+_.+");
   private static final String EDIT_IN_PLACE_CLASS_FORMAT = "eip_%s_%s";
-  private static Pattern cssPixels = compile("([0-9]+)px");
+  private static final Pattern cssPixels = compile("([0-9]+)px");
   public final ElementType elementType;
   private final Map<Attribute, String> attributes;
   private final Map<String, String> customAttributes;
@@ -45,6 +47,7 @@ public abstract class Element {
   private final AttributeRule[] attributeRules;
   private final List<Element> children;
   private Element parent;
+  @Setter
   private DocumentLocation location;
   private Map<String, Object> data;
   private HashMap<String, Method> dataCloneMethods;
@@ -62,14 +65,14 @@ public abstract class Element {
     attributes = new EnumMap<>(Attribute.class);
     customAttributes = new HashMap<>();
     this.children = new ArrayList<>(children.length);
-    for (final Child child : children) {
-      addChild((Element) child);
-    }
     if (LutraDebugger.isEnabled()) {
       final DocumentLocation location = DocumentLocation.fromStack();
       if (location != null) {
         this.location = location;
       }
+    }
+    for (final Child child : children) {
+      addChild((Element) child);
     }
   }
 
@@ -90,16 +93,17 @@ public abstract class Element {
 
   private static void outputAttribute(final Appendable output, final Attribute key,
                                       final String attributeValue)
-    throws IOException {
+      throws IOException {
     final String trimmedValue = attributeValue.trim();
     output.append(' ').append(key.toString()).append("=\"");
     final String escaped = Escaper.html40.escape(trimmedValue);
     output.append(escaped.replaceAll("&amp;", "&"));  // stupid google thing [BJX-87]
     output.append('"');
   }
+
   private static void outputAttribute(final Appendable output, final String key,
                                       final String attributeValue)
-          throws IOException {
+      throws IOException {
     final String trimmedValue = attributeValue.trim();
     output.append(' ').append(key).append("=\"");
     final String escaped = Escaper.html40.escape(trimmedValue);
@@ -108,7 +112,7 @@ public abstract class Element {
   }
 
   protected static void tab(final Appendable output, final int depth)
-    throws IOException {
+      throws IOException {
     output.append('\n');
     for (int i = 0; i < depth; i++) {
       output.append(' ');
@@ -124,7 +128,7 @@ public abstract class Element {
     return false;
   }
 
-  public Element addChild(final Element... children) {
+  public final Element addChild(final Element... children) {
     return addChild(null, children);
   }
 
@@ -134,10 +138,6 @@ public abstract class Element {
 
   public final DocumentLocation getLocation() {
     return location;
-  }
-
-  public void setLocation(final DocumentLocation location) {
-    this.location = location;
   }
 
   public final Element getParent() {
@@ -154,7 +154,7 @@ public abstract class Element {
     return this;
   }
 
-  public Element addChild(final PreAddChildListener listener, final Element... children) {
+  public final Element addChild(final PreAddChildListener listener, final Element... children) {
     for (final Element child : children) {
       if (child != null) {
         if (listener != null) {
@@ -172,18 +172,18 @@ public abstract class Element {
     return this;
   }
 
-  private static Pattern _Capital = compile("_+(\\w)");
+  private static final Pattern _Capital = compile("_+(\\w)");
 
   static <E extends Enum<E>> String enumToCamelCase(final Enum<E> arg) {
     return Optional.ofNullable(arg)
-      .map(Enum::name)
-      .map(String::toLowerCase)
-      .map(s -> _Capital.matcher(s).replaceAll(match -> match.group(1).toUpperCase()))
-      .orElse(null);
+        .map(Enum::name)
+        .map(String::toLowerCase)
+        .map(s -> _Capital.matcher(s).replaceAll(match -> match.group(1).toUpperCase()))
+        .orElse(null);
   }
 
   public void addHelp(final String help) {
-    if (help == null || help.trim().length() == 0) {
+    if (help == null || help.trim().isEmpty()) {
       removeTooltip();
       hide();
     } else {
@@ -207,7 +207,7 @@ public abstract class Element {
   }
 
   public Element removeClass(final String... cssClasses) {
-    // only worth implementing in CommonAbstractElement subclass
+    // only worth implementing in the CommonAbstractElement subclass
     return this;
   }
 
@@ -218,21 +218,25 @@ public abstract class Element {
 
   public Element setStyle(final String style, final String value) {
     final String styleValue = getAttribute(STYLE);
-    if (styleValue == null || styleValue.length() == 0) {
+    if (styleValue == null || styleValue.isEmpty()) {
       setAttribute(STYLE, String.format("%s:%s;", style, value));
     } else {
-      final StringBuilder buffer = new StringBuilder(0);
-      final String[] styleTokens = STYLE_DELIMITERS.split(styleValue);
-      for (int i = 0; i < styleTokens.length; i += 2) {
-        final String token = styleTokens[i];
-        if (!token.equals(style) && i + 1 < styleTokens.length) {
-          buffer.append(token).append(':').append(styleTokens[i + 1]).append(';');
-        }
-      }
+      var buffer = new StringBuilder(0);
+      var styleTokens = STYLE_DELIMITERS.split(styleValue);
+      tokenizeStyles(style, buffer, styleTokens);
       buffer.append(style).append(':').append(value).append(';');
       setAttribute(STYLE, buffer.toString());
     }
     return this;
+  }
+
+  private void tokenizeStyles(String style, StringBuilder buffer, String[] styleTokens) {
+    for (int i = 0; i < styleTokens.length; i += 2) {
+      final String token = styleTokens[i];
+      if (!token.equals(style) && i + 1 < styleTokens.length) {
+        buffer.append(token).append(':').append(styleTokens[i + 1]).append(';');
+      }
+    }
   }
 
   public String getAttribute(final String attribute) {
@@ -244,7 +248,7 @@ public abstract class Element {
   }
 
   public Element setAttribute(final String attribute, final String value) {
-    if(value == null) {
+    if (value == null) {
       customAttributes.remove(attribute);
     } else {
       customAttributes.put(attribute, value);
@@ -262,7 +266,7 @@ public abstract class Element {
   }
 
   public Element setTooltip(final String tooltip) {
-    if (tooltip == null || tooltip.trim().length() == 0) {
+    if (tooltip == null || tooltip.trim().isEmpty()) {
       removeTooltip();
     } else {
       setTitle(tooltip);
@@ -273,12 +277,12 @@ public abstract class Element {
 
   public Element setTitle(final String title) {
     throw new UnsupportedOperationException(
-      String.format("Element of type %s cannot have attribute %s", elementType, TITLE));
+        String.format("Element of type %s cannot have attribute %s", elementType, TITLE));
   }
 
   public Element addClass(final String... cssClasses) {
     throw new UnsupportedOperationException(
-      String.format("Elements of type %s cannot have a %s attribute", elementType, CLASS));
+        String.format("Elements of type %s cannot have a %s attribute", elementType, CLASS));
   }
 
   public Element show() {
@@ -286,19 +290,15 @@ public abstract class Element {
     return this;
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public Element removeStyle(final String style) {
     final String styleValue = getAttribute(STYLE);
     if (styleValue != null) {
-      if (styleValue.length() > 0) {
+      if (!styleValue.isEmpty()) {
         final StringBuilder buffer = new StringBuilder(0);
         final String[] styleTokens = STYLE_DELIMITERS.split(styleValue);
-        for (int i = 0; i < styleTokens.length; i += 2) {
-          final String token = styleTokens[i];
-          if (!token.equals(style) && i + 1 < styleTokens.length) {
-            buffer.append(token).append(':').append(styleTokens[i + 1]).append(';');
-          }
-        }
-        if (buffer.length() == 0) {
+        tokenizeStyles(style, buffer, styleTokens);
+        if (buffer.isEmpty()) {
           removeAttribute(STYLE);
         } else {
           setAttribute(STYLE, buffer.toString());
@@ -310,6 +310,7 @@ public abstract class Element {
     return this;
   }
 
+  @SuppressWarnings("unused")
   public Element addRemoveClass(final boolean add, final String... cssClasses) {
     for (final String cssClass : cssClasses) {
       if (add) {
@@ -335,27 +336,27 @@ public abstract class Element {
       // if none specified, check all descendants
       copy = copyWithListeners(List.of());
       StreamSupport.stream(copy.getTree().spliterator(), false)
-        .filter(predicate).collect(toList()).forEach(functor);
+          .filter(predicate).toList().forEach(functor);
     } else {
       final Collection<InstanceListener> listeners = new ArrayList<>(elementsToRemove.length);
       of(elementsToRemove)
-        .filter(Objects::nonNull)
-        .filter(predicate)
-        .map(InstanceListener::new).forEach(listeners::add);
+          .filter(Objects::nonNull)
+          .filter(predicate)
+          .map(InstanceListener::new).forEach(listeners::add);
       copy = copyWithListeners(listeners);
       listeners.stream()
-        .map(InstanceListener::getClone)
-        .filter(Objects::nonNull)
-        .forEach(functor);
+          .map(InstanceListener::getClone)
+          .filter(Objects::nonNull)
+          .forEach(functor);
       return copy;
     }
     return copy;
   }
 
   /**
-   * Returns an iterable including this element and all its descendants.
+   * Creates an Iterable including this element and all its descendants.
    *
-   * @return an iterable including this element and all its descendants.
+   * @return an Iterable including this element and all its descendants.
    */
   public Iterable<Element> getTree() {
     return () -> new BreadthFirstIterator<>(this) {
@@ -414,7 +415,7 @@ public abstract class Element {
   }
 
   public Collection<String> removeClass(final Pattern pattern) {
-    // only worth implementing in CommonAbstractElement subclass
+    // only worth implementing in the CommonAbstractElement subclass
     return Collections.emptyList();
   }
 
@@ -432,6 +433,7 @@ public abstract class Element {
     }
   }
 
+  @SuppressWarnings("unused")
   public String escapeAbbreviated() {
     return Escaper.html40.escape(toStringAbbreviated());
   }
@@ -440,22 +442,18 @@ public abstract class Element {
     final StringBuilder output = new StringBuilder(32);
     output.append('<').append(elementType);
     for (final Map.Entry<Attribute, String> entry : attributes.entrySet()) {
-      final String attributeValue = entry.getValue();
+      var attributeValue = entry.getValue();
       final String trimmedValue = attributeValue.trim();
-      if (trimmedValue != null) {
-        output.append(' ').append(entry.getKey()).append("=\"");
-        output.append(Escaper.html40.escape(trimmedValue));
-        output.append('"');
-      }
+      output.append(' ').append(entry.getKey()).append("=\"");
+      output.append(Escaper.html40.escape(trimmedValue));
+      output.append('"');
     }
     for (final Map.Entry<String, String> entry : customAttributes.entrySet()) {
       final String attributeValue = entry.getValue();
       final String trimmedValue = attributeValue.trim();
-      if (trimmedValue != null) {
-        output.append(' ').append(entry.getKey()).append("=\"");
-        output.append(Escaper.html40.escape(trimmedValue));
-        output.append('"');
-      }
+      output.append(' ').append(entry.getKey()).append("=\"");
+      output.append(Escaper.html40.escape(trimmedValue));
+      output.append('"');
     }
     if (isClosed()) {
       output.append('/');
@@ -509,36 +507,36 @@ public abstract class Element {
 
   public Element up(final Predicate<Element> predicate) {
     return StreamSupport
-      .stream(getAncestors().spliterator(), false)
-      .filter(predicate)
-      .findFirst()
-      .orElse(null);
+        .stream(getAncestors().spliterator(), false)
+        .filter(predicate)
+        .findFirst()
+        .orElse(null);
   }
 
   public Element down(final Predicate<Element> predicate) {
     return StreamSupport
-      .stream(getDescendants().spliterator(), false)
-      .filter(predicate)
-      .findFirst()
-      .orElse(null);
+        .stream(getDescendants().spliterator(), false)
+        .filter(predicate)
+        .findFirst()
+        .orElse(null);
   }
 
   public Iterable<Element> getAncestors() {
     return () ->
-      new Iterator<>() {
-        Element nextChild = Element.this;
+        new Iterator<>() {
+          Element nextChild = Element.this;
 
-        @Override
-        public boolean hasNext() {
-          return nextChild.parent != null;
-        }
+          @Override
+          public boolean hasNext() {
+            return nextChild.parent != null;
+          }
 
-        @Override
-        public Element next() {
-          nextChild = nextChild.parent;
-          return nextChild;
-        }
-      };
+          @Override
+          public Element next() {
+            nextChild = nextChild.parent;
+            return nextChild;
+          }
+        };
 
   }
 
@@ -558,9 +556,9 @@ public abstract class Element {
   }
 
   /**
-   * Returns an iterable including this element's descendants.
+   * Returns an Iterable including this element's descendants.
    *
-   * @return an iterable including this element's descendants.
+   * @return an Iterable including this element's descendants.
    */
   public Iterable<Element> getDescendants() {
     return () -> new BreadthFirstIterator<>(children.iterator()) {
@@ -577,7 +575,7 @@ public abstract class Element {
 
   public String getStyle(final String style) {
     final String styleValue = getAttribute(STYLE);
-    if (styleValue != null && styleValue.length() > 0) {
+    if (styleValue != null && !styleValue.isEmpty()) {
       final String[] styleTokens = STYLE_DELIMITERS.split(styleValue);
       for (int i = 0; i < styleTokens.length; i++) {
         final String token = styleTokens[i];
@@ -608,6 +606,7 @@ public abstract class Element {
     return null;
   }
 
+  @SuppressWarnings("unused")
   public Iterable<Element> getSiblingsAfter() {
     return () -> {
       final ChildIterator iterator = new ChildIterator(parent);
@@ -738,6 +737,7 @@ public abstract class Element {
     }
     return this;
   }
+
   public Element removeAttribute(final Attribute... attributes) {
     for (final Attribute attribute : attributes) {
       this.attributes.remove(attribute);
@@ -761,6 +761,7 @@ public abstract class Element {
     return false;
   }
 
+  @SuppressWarnings("unused")
   public boolean replaceWith(final Element replacement) {
     return parent != null && parent.replaceChild(this, replacement);
   }
@@ -794,8 +795,6 @@ public abstract class Element {
         try {
           addXhtmlToNode(text);
           break;
-        } catch (IOException e) {
-          throw new RuntimeException(e);
         } catch (SAXException e) {
           //todo this doesn't really fix cases where you have valid entity references with stray
           // ampersands
@@ -805,7 +804,7 @@ public abstract class Element {
             text = Escaper.html40.replaceWithUnicode(text);
           } else {
             // parse failed, add as text
-            System.err.println(String.format("Unable to parse XHTML: %s", e.getMessage()));
+            err.printf("Unable to parse XHTML: %s%n", e.getMessage());
             appendChild(new TextContent(text));
             break;
           }
@@ -820,18 +819,13 @@ public abstract class Element {
     children.clear();
   }
 
-  private void addXhtmlToNode(final String src)
-    throws Exception {
-    final StringBuilder xml = new StringBuilder(XML_HEADER);
-    xml.append("<span>");
-    xml.append(src);
-    xml.append("</span>");
-    final DocumentBuilder builder = new DocumentBuilder(null);
+  private void addXhtmlToNode(final String src) throws SAXException {
+    var builder = new DocumentBuilder(null);
     addChild(builder.load(src));
   }
 
   public List<Element> getChildren() {
-    return new AbstractList<Element>() {
+    return new AbstractList<>() {
       @Override
       public Iterator<Element> iterator() {
         return new ChildIterator(Element.this);
@@ -872,19 +866,20 @@ public abstract class Element {
     return this;
   }
 
+  @SuppressWarnings("unused")
   public void toJavascriptFunction(final StringBuilder javascript) {
     javascript.append("function() {\n");
     javascript
-      .append("var node = document.createElement('")
-      .append(elementType.name)
-      .append("');\n");
+        .append("var node = document.createElement('")
+        .append(elementType.name)
+        .append("');\n");
     for (final Map.Entry<Attribute, String> entry : attributes.entrySet()) {
       javascript.append("node.setAttribute('").append(entry.getKey().name).append("','").append(
-        entry.getValue()).append("');\n");
+          entry.getValue()).append("');\n");
     }
     for (final Map.Entry<String, String> entry : customAttributes.entrySet()) {
       javascript.append("node.setAttribute('").append(entry.getKey()).append("','").append(
-              entry.getValue()).append("');\n");
+          entry.getValue()).append("');\n");
     }
     for (final Element child : children) {
       javascript.append("node.appendChild(");
@@ -896,7 +891,7 @@ public abstract class Element {
   }
 
   public String toString(final boolean pretty)
-    throws IOException {
+      throws IOException {
     final StringBuilder output = new StringBuilder(1024);
     toString(output, pretty, 0, null, null);
     return output.toString();
@@ -905,7 +900,7 @@ public abstract class Element {
   public boolean toString(final Appendable output, final boolean pretty, final int depth,
                           final ElementType previous,
                           final ElementType next)
-    throws IOException {
+      throws IOException {
     final boolean tab = pretty && needsTab();
     if (tab) {
       tab(output, depth);
@@ -920,28 +915,26 @@ public abstract class Element {
       output.append(" itemscope");
     }
     attributes.entrySet().stream().filter(filter).forEach(
-      entry -> {
-        try {
-          outputAttribute(output, entry.getKey(), entry.getValue());
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-      });
-    customAttributes.entrySet().stream().forEach(
-            entry -> {
-              try {
-                outputAttribute(output, entry.getKey(),entry.getValue());
-              } catch (IOException e) {
-                throw new RuntimeException(e);
-              }
-            }
-    );
+        entry -> {
+          try {
+            outputAttribute(output, entry.getKey(), entry.getValue());
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        });
+    customAttributes.forEach((key, value) -> {
+      try {
+        outputAttribute(output, key, value);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
 
     if (data != null) {
       for (Map.Entry<String, Object> entry : data.entrySet()) {
         if (metaAttributes.matcher(entry.getKey()).find()) {
           output.append(' ').append(entry.getKey()).append('=').append('"').append(
-            entry.getValue().toString()).append('"');
+              entry.getValue().toString()).append('"');
         }
       }
     }
@@ -953,8 +946,8 @@ public abstract class Element {
       for (int i = 0; i < children.size(); i++) {
         final Element child = children.get(i);
         ourChildrenTabbed |= outputChild(output, child, pretty, depth,
-          i > 0 ? children.get(i - 1).elementType : null,
-          i + 1 < children.size() ? children.get(i + 1).elementType : null);
+            i > 0 ? children.get(i - 1).elementType : null,
+            i + 1 < children.size() ? children.get(i + 1).elementType : null);
       }
       if (ourChildrenTabbed) {
         tab(output, depth);
@@ -971,10 +964,11 @@ public abstract class Element {
 
   protected boolean outputChild(final Appendable output, final Element child, final boolean pretty,
                                 final int depth, final ElementType previous, final ElementType next)
-    throws IOException {
+      throws IOException {
     return child.toString(output, pretty, depth + 1, previous, next);
   }
 
+  @SuppressWarnings("unused")
   public Element toggleClass(final boolean mode, final String a, final String b) {
     addClass(mode ? a : b);
     removeClass(mode ? b : a);
@@ -1010,11 +1004,11 @@ public abstract class Element {
 
   public Element setId(final String value) {
     throw new UnsupportedOperationException(
-      String.format("Element of type %s cannot have attribute %s", elementType, TITLE));
+        String.format("Element of type %s cannot have attribute %s", elementType, TITLE));
   }
 
   private static class ChildIterator
-    implements Iterator<Element> {
+      implements Iterator<Element> {
     private final Iterator<Element> iterator;
     private Element lastGiven;
 
@@ -1065,7 +1059,7 @@ public abstract class Element {
       for (final StackTraceElement traceElement : new Exception().getStackTrace()) {
         final String className = traceElement.getClassName();
         if (Element.class.getName().equals(className) && "cloneWithListeners".equals(
-          traceElement.getMethodName())) {
+            traceElement.getMethodName())) {
           return null;
         }
         if (!className.startsWith("net.mage.lutra") && !className.startsWith("org.apache.xerces")) {
